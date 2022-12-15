@@ -15,3 +15,5 @@ public class Main {
         }
     }
 }
+
+//jackson greift auf die getter zu

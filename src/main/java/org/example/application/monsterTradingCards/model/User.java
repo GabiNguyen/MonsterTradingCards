@@ -1,31 +1,3 @@
-/*package org.example.application.monsterTradingCards.model;
-
-import java.util.ArrayList;
-
-public class User {
-    private String username;
-    private String password;
-    private int coins;
-    private ArrayList<Card> stack;
-    private ArrayList<Card> deck;
-    //private ArrayList<Card> package;
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.coins = 20;
-    }
-
-    public String getUsername() { return username; }
-    public void setUsername() { this.username = username; }
-
-    public String getPassword() { return password; }
-    public void setPassword() { this.password = password; }
-
-    public int getCoins() { return coins; }
-    public void setCoins() { this.coins = coins; }
-}*/
-
 package org.example.application.monsterTradingCards.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
