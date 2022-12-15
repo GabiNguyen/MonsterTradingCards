@@ -1,5 +1,7 @@
 package org.example.server.util;
 
+import org.example.server.exception.UnsupportedProtocolException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +20,17 @@ public class HttpRegex {
 
     public static String findPath(String request) {
         Pattern r = Pattern.compile("^[A-Z]+\\s(\\S+)", Pattern.MULTILINE);
+        Matcher m = r.matcher(request);
+
+        if (!m.find()) {
+            return null;
+        }
+
+        return m.group(1);
+    }
+
+    public static String findContent(String request) {
+        Pattern r = Pattern.compile("^.+[\\r\\n|\\r|\\n]{2}(.*)", Pattern.MULTILINE | Pattern.DOTALL);
         Matcher m = r.matcher(request);
 
         if (!m.find()) {

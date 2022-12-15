@@ -18,7 +18,7 @@ public class RequestHandler implements Runnable {
     private PrintWriter out;
 
     private final Socket socket;
-    private final org.example.server.Application application;
+    private final Application application;
 
     public RequestHandler(Socket socket, org.example.server.Application application) {
         this.socket = socket;

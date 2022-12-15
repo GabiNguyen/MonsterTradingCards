@@ -3,6 +3,9 @@ package org.example.server.util;
 import org.example.server.dto.Request;
 import org.example.server.exception.UnsupportedProtocolException;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class RequestBuilder {
 
     /**
@@ -23,7 +26,10 @@ public class RequestBuilder {
         request.setPath(getPath(requestString));
 
         // Content Length
-        request.setContentLength(org.example.server.util.HttpRegex.findHeaderAsInt(requestString, "Content-Length"));
+        request.setContentLength(HttpRegex.findHeaderAsInt(requestString, "Content-Length"));
+
+        // Content
+        request.setContent(HttpRegex.findContent(requestString));
 
         // TODO: Add additional information to the request
 
@@ -31,7 +37,7 @@ public class RequestBuilder {
     }
 
     private static String getMethod(String requestString) throws UnsupportedProtocolException {
-        String method = org.example.server.util.HttpRegex.findMethod(requestString);
+        String method = HttpRegex.findMethod(requestString);
 
         if (null == method) {
             throw new UnsupportedProtocolException("No HTTP method in request");
@@ -41,7 +47,7 @@ public class RequestBuilder {
     }
 
     private static String getPath(String requestString) throws UnsupportedProtocolException {
-        String path = org.example.server.util.HttpRegex.findPath(requestString);
+        String path = HttpRegex.findPath(requestString);
 
         if (null == path) {
             throw new UnsupportedProtocolException("No HTTP path in request");
