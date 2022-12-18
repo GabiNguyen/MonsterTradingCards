@@ -10,13 +10,10 @@ public class User {
     private String username;
     private String password;
     private int coins;
-    private ArrayList<org.example.application.monsterTradingCards.model.Card> stack;
-    private ArrayList<org.example.application.monsterTradingCards.model.Card> deck;
-    //private ArrayList<Card> package;
 
-
-    public User() {
-    }
+//    private ArrayList<Card> stack;
+//    private ArrayList<Card> deck;
+//    private ArrayList<Card> package;
 
     public User(String username, String password) {
         this.username = username;
@@ -24,27 +21,27 @@ public class User {
         this.coins = 20;
     }
 
-    public String getUsername() {
-        return username;
+    public User() {
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getUsername() { return username; }
 
-    public String getPassword() {
-        return password;
-    }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getPassword() { return password; }
 
-    public int getCoins() {
-        return coins;
-    }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setCoins(int coins) {
-        this.coins = coins;
+    public int getCoins() { return coins; }
+
+    public void setCoins(int coins) { this.coins = coins; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+
     }
 }

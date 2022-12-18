@@ -23,6 +23,7 @@ public class MonsterTradingCardsApp implements Application {
     public MonsterTradingCardsApp() {
         UserRepository userRepository = new UserMemoryRepository();
         this.userController = new UserController(userRepository);
+        this.sessionController = new SessionController(userRepository);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class MonsterTradingCardsApp implements Application {
         }
 
         if (request.getPath().startsWith("/sessions")) {
-            return userController.handle(request);
+            return sessionController.handle(request);
         }
 
         if (request.getPath().startsWith("/cards")) {
@@ -44,7 +45,7 @@ public class MonsterTradingCardsApp implements Application {
         }
 
         if (request.getPath().startsWith("/packages")) {
-            return userController.handle(request);
+            return packageController.handle(request);
         }
 
         if (request.getPath().startsWith("/score")) {
