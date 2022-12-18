@@ -1,11 +1,18 @@
 package org.example.application.monsterTradingCards.model;
 
-import java.lang.annotation.ElementType;
-
 public class Card {
 
+    private String id;
     private String name;
     private int damage;
+    private ElementType elementType;
+    private Category category;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {this.id = id;}
 
     public String getName() {
         return name;
@@ -18,6 +25,13 @@ public class Card {
     }
 
     public void setDamage(int damage) {this.damage = damage;}
+
+    public ElementType getElementType() {
+        return elementType;
+    }
+    public void setElementType(ElementType elementType) {this.elementType = elementType;}
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) {this.category = category;}
 
 }
 

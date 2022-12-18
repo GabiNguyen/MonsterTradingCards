@@ -7,10 +7,7 @@ import java.util.List;
 public interface UserRepository {
 
     List<User> findAll();
-
     User findByUsername(String username);
-
     User save(User user);
-
-    User delete(User user);
+    //User delete(User user);
 }

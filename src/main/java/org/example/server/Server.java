@@ -24,7 +24,6 @@ public class Server {
         System.out.println("Start server...");
         server = new ServerSocket(PORT, 5);
         System.out.println("Server running at: http://localhost:" + PORT);
-
         run();
     }
 
