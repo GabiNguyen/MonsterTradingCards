@@ -1,5 +1,6 @@
 package org.example.server.dto;
 
+import org.example.server.http.Authorization;
 import org.example.server.http.ContentType;
 import org.example.server.http.StatusCode;
 
@@ -9,6 +10,7 @@ public class Response {
     private String message;
 
     private String contentType;
+    private String authorization;
     private String content = "";
 
     public void setStatusCode(StatusCode statusCode) {
@@ -24,21 +26,18 @@ public class Response {
         return message;
     }
 
-    public String getContentType() {
-        return contentType;
-    }
+    public String getContentType() { return contentType; }
 
-    public void setContentType(ContentType contentType) {
-        this.contentType = contentType.contentType;
-    }
+    public void setContentType(ContentType contentType) { this.contentType = contentType.contentType; }
+    public String getAuthorization() { return authorization; }
+
+    public void setAuthorization(Authorization authorization) { this.authorization = authorization.authorization; }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+    public void setContent(String content) { this.content = content; }
 
     @Override
     public String toString() {

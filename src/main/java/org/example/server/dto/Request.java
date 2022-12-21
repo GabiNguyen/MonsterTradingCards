@@ -4,24 +4,19 @@ public class Request {
 
     private String method;
     private String path;
-
     private String contentType;
     private int contentLength;
+    private String authorization;
     private String content;
-
     private String request;
 
-    public String getMethod() {
-        return method;
-    }
+    public String getMethod() { return method; }
 
     public void setMethod(String method) {
         this.method = method;
     }
 
-    public String getPath() {
-        return path;
-    }
+    public String getPath() { return path; }
 
     public void setPath(String path) {
         this.path = path;
@@ -41,6 +36,14 @@ public class Request {
 
     public void setContentLength(int contentLength) {
         this.contentLength = contentLength;
+    }
+
+    public String getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(String authorization) {
+        this.authorization = authorization;
     }
 
     public String getContent() {

@@ -4,9 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.application.monsterTradingCards.Database.DBconnect;
-import org.example.application.monsterTradingCards.model.User;
-
 public class DatabaseInit {
     private static String DB_URL = "jdbc:postgresql://localhost:5432/swe1db";
     private static String DB_USER = "swe1user";
@@ -37,12 +34,14 @@ public class DatabaseInit {
                     CREATE TABLE IF NOT EXISTS cards (
                         id VARCHAR(255) PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
-                        damage INT NOT NULL,
-                        elementType CHAR(255) NOT NULL,
-                        category CHAR(255) NOT NULL
+                        damage INT NOT NULL
                     );
                     """
         );
         stmt2.close();
+
+//        for later  maybe
+//        elementType CHAR(255) NOT NULL,
+//        category CHAR(255) NOT NULL
     }
 }
