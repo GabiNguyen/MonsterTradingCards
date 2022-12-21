@@ -33,6 +33,7 @@ public class SessionController {
     private Response login(Request request) {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
+        System.out.println(json);
         User user;
         try {
             user = objectMapper.readValue(json, User.class);

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import static org.example.DatabaseInit.conn;
 
 public class LoginService {
-    private String token;
+    private static String token;
     public static User login(User user) {
         // check credentials
         String checkCreds = "SELECT * FROM users WHERE username = ? and password = ?";
@@ -19,6 +19,7 @@ public class LoginService {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     // credentials are right
+                    authorize(user);
                     return user;
                 } else {
                     return null;
@@ -30,8 +31,9 @@ public class LoginService {
         }
     }
 
-    public String authorize(User user) {
+    public static String authorize(User user) {
         token = "Basic " + user.getUsername() + "-mtcgToken";
+        System.out.println(token);
         return token;
     }
 }

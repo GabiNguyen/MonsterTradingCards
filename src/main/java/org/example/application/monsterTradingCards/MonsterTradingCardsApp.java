@@ -1,6 +1,7 @@
 package org.example.application.monsterTradingCards;
 
 import org.example.application.monsterTradingCards.controller.*;
+import org.example.application.monsterTradingCards.repository.CardRepository;
 import org.example.application.monsterTradingCards.repository.UserRepository;
 import org.example.application.monsterTradingCards.repository.UserMemoryRepository;
 import org.example.server.Application;
@@ -22,8 +23,10 @@ public class MonsterTradingCardsApp implements Application {
 
     public MonsterTradingCardsApp() {
         UserRepository userRepository = new UserMemoryRepository();
+        CardRepository cardRepository = new CardRepository();
         this.userController = new UserController(userRepository);
         this.sessionController = new SessionController(userRepository);
+        this.packageController = new PackageController(cardRepository);
     }
 
     @Override
@@ -40,12 +43,12 @@ public class MonsterTradingCardsApp implements Application {
             return userController.handle(request);
         }
 
-        if (request.getPath().startsWith("/battles")) {
-            return userController.handle(request);
-        }
-
         if (request.getPath().startsWith("/packages")) {
             return packageController.handle(request);
+        }
+
+        if (request.getPath().startsWith("/battles")) {
+            return userController.handle(request);
         }
 
         if (request.getPath().startsWith("/score")) {

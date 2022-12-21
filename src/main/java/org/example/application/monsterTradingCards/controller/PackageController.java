@@ -6,6 +6,7 @@ import org.example.application.monsterTradingCards.model.Card;
 import org.example.application.monsterTradingCards.repository.CardRepository;
 import org.example.server.dto.Request;
 import org.example.server.dto.Response;
+import org.example.server.http.Authorization;
 import org.example.server.http.ContentType;
 import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
@@ -28,22 +29,26 @@ public class PackageController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-        Card card;
+//        System.out.println(json);
+        Card[] pack;
 
         try {
-            card = objectMapper.readValue(json, Card.class);
+            pack = objectMapper.readValue(json, Card[].class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
-        card = CardRepository.save(card);
+        pack = new Card[]{CardRepository.save(pack)};
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
         response.setContentType(ContentType.APPLICATION_JSON);
+        response.setAuthorization(Authorization.AUTHORIZATION);
         String content = null;
         try {
-            content = objectMapper.writeValueAsString(card);
+            content = objectMapper.writeValueAsString(pack);
+            System.out.println(content);
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
