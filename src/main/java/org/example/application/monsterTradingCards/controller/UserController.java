@@ -12,6 +12,7 @@ import org.example.server.http.StatusCode;
 
 public class UserController {
 
+    static User user;
     private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) { this.userRepository = userRepository; }
@@ -32,7 +33,6 @@ public class UserController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-        User user;
 
         try {
             user = objectMapper.readValue(json, User.class);

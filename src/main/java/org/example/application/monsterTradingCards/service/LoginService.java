@@ -18,6 +18,8 @@ public class LoginService {
             ps.setString(2, user.getPassword());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    // temporary fix because coins don't get initialize in the constructor and persist
+                    user.setCoins(20);
                     // credentials are right
                     authorize(user);
                     return user;
@@ -33,7 +35,7 @@ public class LoginService {
 
     public static String authorize(User user) {
         token = "Basic " + user.getUsername() + "-mtcgToken";
-        System.out.println(token);
+//        System.out.println(token);
         return token;
     }
 }

@@ -2,6 +2,8 @@ package org.example.application.monsterTradingCards.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.util.ArrayList;
+
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class User {
 
@@ -9,9 +11,8 @@ public class User {
     private String password;
     private int coins;
 
-//    private ArrayList<Card> stack;
+    private ArrayList<Card> stack;
 //    private ArrayList<Card> deck;
-//    private ArrayList<Card> package;
 
     public User(String username, String password) {
         this.username = username;

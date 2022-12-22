@@ -8,14 +8,19 @@ import org.example.application.monsterTradingCards.model.User;
 import org.example.application.monsterTradingCards.service.LoginService;
 import org.example.server.dto.Request;
 import org.example.server.dto.Response;
+import org.example.server.http.Authorization;
 import org.example.server.http.ContentType;
 import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
 
 import java.util.List;
 
+import static org.example.application.monsterTradingCards.service.LoginService.authorize;
+
 public class SessionController {
 
+    // maybe change to private later
+    public static User user;
     private final UserRepository userRepository;
 
     public SessionController(UserRepository userRepository) { this.userRepository = userRepository; }
@@ -33,8 +38,8 @@ public class SessionController {
     private Response login(Request request) {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-        System.out.println(json);
-        User user;
+//        System.out.println(json);
+
         try {
             user = objectMapper.readValue(json, User.class);
         } catch (JsonProcessingException e) {
@@ -42,10 +47,13 @@ public class SessionController {
         }
 
         user = LoginService.login(user);
+//        // user could log in -> use user of UserController (temporary fix for coins)
+//        if(user != null) { user = UserController.user;}
 
         Response response = new Response();
         response.setStatusCode(StatusCode.OK);
         response.setContentType(ContentType.APPLICATION_JSON);
+        response.setAuthorization(Authorization.BASIC);
         String content = null;
         try {
             content = objectMapper.writeValueAsString(user);

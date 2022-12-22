@@ -45,6 +45,7 @@ public class Response {
                 "HTTP/1.1 " + status + " " + message + "\r\n" +
                         "Content-Type: " + contentType + "\r\n" +
                         "Content-Length: " + content.length() + "\r\n" +
+                        "Authorization: " + authorization + "\r\n" +
                         "\r\n" +
                         content;
     }

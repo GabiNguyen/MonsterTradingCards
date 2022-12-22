@@ -30,7 +30,7 @@ public class UserMemoryRepository implements UserRepository {
     }
     public User save(User user) {
         User foundUser = findByUsername(user.getUsername());
-        // user not found in database
+        // user not found in database (-> insert user)
         if(foundUser == null) {
             // insert new user
             String insertUser = "INSERT INTO users (username, password) VALUES (?, ?)";
@@ -42,6 +42,7 @@ public class UserMemoryRepository implements UserRepository {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
+            user.setCoins(20);
             return user;
         }
         return null;

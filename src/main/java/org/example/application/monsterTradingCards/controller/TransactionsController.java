@@ -13,12 +13,13 @@ import org.example.server.http.ContentType;
 import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
 
-public class PackageController {
-    static Card[] pack;
+import java.util.Arrays;
+
+public class TransactionsController {
     private final CardRepository cardRepository;
-    public PackageController(CardRepository cardRepository) { this.cardRepository = cardRepository; }
+    public TransactionsController(CardRepository cardRepository) { this.cardRepository = cardRepository; }
     public Response handle(Request request) {
-        if (request.getMethod().equals(Method.POST.method)) { return create(request); }
+        if (request.getMethod().equals(Method.POST.method)) { return acquire(request); }
         Response response = new Response();
         response.setStatusCode(StatusCode.METHOD_NOT_ALLOWED);
         response.setContentType(ContentType.TEXT_PLAIN);
@@ -27,35 +28,36 @@ public class PackageController {
         return response;
     }
 
-    private Response create(Request request) {
+    private Response acquire(Request request) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = request.getContent();
-//        Card[] pack;
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String json = request.getContent();
+        Card[] stack = PackageController.pack;
         User user = SessionController.user;
 
-        try {
-            pack = (objectMapper.readValue(json, Card[].class));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        // TODO: error handling if user isn't logged-in (user == null)
-        // only admin can create packages (save it to the database)
-        if(LoginService.authorize(user).equals("Basic admin-mtcgToken")) { pack = cardRepository.save(pack); }
+//        try {
+//            stack = (objectMapper.readValue(json, Card[].class));
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        // only logged-in users can acquire packages
+        if(LoginService.authorize(user) != null) { stack = cardRepository.update(stack); }
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
         response.setContentType(ContentType.APPLICATION_JSON);
         response.setAuthorization(Authorization.BASIC);
         String content = null;
+        content = Arrays.toString(stack);
 
-        try {
-            content = objectMapper.writeValueAsString(pack);
-            System.out.println(content);
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            content = objectMapper.writeValueAsString(stack);
+//            System.out.println(content);
+//
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
         response.setContent(content);
 
         return response;
