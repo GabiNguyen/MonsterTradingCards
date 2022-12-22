@@ -2,7 +2,7 @@ package org.example.server.http;
 
 public enum Authorization {
     // basic for credentials
-    AUTHORIZATION("Basic");
+    BASIC("Basic");
 
     Authorization(String authorization) {
         this.authorization = authorization;

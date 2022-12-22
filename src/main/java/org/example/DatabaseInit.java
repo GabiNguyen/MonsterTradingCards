@@ -33,6 +33,8 @@ public class DatabaseInit {
                 """
                     CREATE TABLE IF NOT EXISTS cards (
                         id VARCHAR(255) PRIMARY KEY,
+                        userid VARCHAR(255),
+                        FOREIGN KEY(userid) references users(username),
                         name VARCHAR(255) NOT NULL,
                         damage INT NOT NULL
                     );

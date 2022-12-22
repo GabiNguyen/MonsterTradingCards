@@ -10,7 +10,7 @@ public class DBconnect {
     private static String DB_PW = "swe1pw";
     public static Connection conn;
 
-    //getConnection function
+    //TODO: getConnection function
     public static void getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection( DB_URL, DB_USER, DB_PW );
     }

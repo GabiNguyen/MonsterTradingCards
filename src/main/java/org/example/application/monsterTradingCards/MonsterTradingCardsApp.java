@@ -17,6 +17,7 @@ public class MonsterTradingCardsApp implements Application {
     private SessionController sessionController;
     private CardController cardController;
     private PackageController packageController;
+    private TransactionsController transactionsController;
     private ScoreController scoreController;
     private StatsController statsController;
     private TradingController tradingController;
@@ -27,6 +28,7 @@ public class MonsterTradingCardsApp implements Application {
         this.userController = new UserController(userRepository);
         this.sessionController = new SessionController(userRepository);
         this.packageController = new PackageController(cardRepository);
+        this.transactionsController = new TransactionsController(cardRepository);
     }
 
     @Override
@@ -45,6 +47,10 @@ public class MonsterTradingCardsApp implements Application {
 
         if (request.getPath().startsWith("/packages")) {
             return packageController.handle(request);
+        }
+
+        if (request.getPath().startsWith("/transactions/packages")) {
+            return transactionsController.handle(request);
         }
 
         if (request.getPath().startsWith("/battles")) {
