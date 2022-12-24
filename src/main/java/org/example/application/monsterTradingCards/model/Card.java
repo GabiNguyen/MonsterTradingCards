@@ -10,15 +10,18 @@ public class Card {
     private String id;
     private String name;
     private Double damage;
+
+    private String cardHolder;
 //    private ElementType elementType;
 //    private Category category;
 
 //    private ArrayList<Card> cards;
 
-    public Card(String id, String name, Double damage) {
+    public Card(String id, String name, Double damage, String cardHolder) {
         this.id = id;
         this.name = name;
         this.damage = damage;
+        this.cardHolder = cardHolder;
     }
 
     public Card() {}
@@ -40,6 +43,12 @@ public class Card {
     }
 
     public void setDamage(Double damage) { this.damage = damage; }
+
+    public String getCardHolder() {
+        return cardHolder;
+    }
+
+    public void setCardHolder(String cardHolder) { this.cardHolder = cardHolder; }
 
 //    public ElementType getElementType() {
 //        return elementType;

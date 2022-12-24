@@ -19,7 +19,7 @@ public class LoginService {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     // temporary fix because coins don't get initialize in the constructor and persist
-                    user.setCoins(20);
+//                    user.setCoins(20);
                     // credentials are right
                     authorize(user);
                     return user;

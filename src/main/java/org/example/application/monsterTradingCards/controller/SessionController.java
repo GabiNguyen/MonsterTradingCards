@@ -46,6 +46,8 @@ public class SessionController {
             throw new RuntimeException(e);
         }
 
+        //TODO: session doesn't work the way intended, user has to be the last one to log in if they want to do sth
+        // -> should be able to do sth regardless when last logged in
         user = LoginService.login(user);
 //        // user could log in -> use user of UserController (temporary fix for coins)
 //        if(user != null) { user = UserController.user;}
