@@ -2,7 +2,6 @@ package org.example.application.monsterTradingCards.repository;
 
 import org.example.application.monsterTradingCards.controller.SessionController;
 import org.example.application.monsterTradingCards.model.Card;
-import org.example.application.monsterTradingCards.model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +16,23 @@ public class CardRepository {
 
     public CardRepository() { this.cards = new ArrayList<>(); }
 
-    public List<Card> findAll() { return this.cards; }
+//    public List<Card> findAll() { return this.cards; }
+
+    public static Card findAll() {
+        String card = "SELECT * FROM cards";
+        try(PreparedStatement ps = conn.prepareStatement(card)) {
+            try(ResultSet rs = ps.executeQuery()) {
+                if(rs.next()) {
+                    return new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid"));
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
     public static Card findById(String id) {
         // check if the card already exists:
@@ -28,9 +43,28 @@ public class CardRepository {
                 if(rs.next()) {
                     // card already exists
                     // https://stackoverflow.com/questions/65197006/saving-and-reading-the-enum-value-to-the-database-with-jdbc
-                    return new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"));
+                    return new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid"));
 //                    for later maybe
 //                    ElementType.valueOf(rs.getString("elementtype")), Category.valueOf(rs.getString("category")
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String findCardHolder(String username) {
+        // check if the card already belongs to a user:
+        String findCardHolder = "SELECT id FROM cards WHERE userid = ?";
+        try(PreparedStatement ps = conn.prepareStatement(findCardHolder)) {
+            ps.setString(1, username);
+            try(ResultSet rs = ps.executeQuery()) {
+                if(rs.next()) {
+                    // card owner already exists
+                    return username;
                 } else {
                     return null;
                 }
@@ -54,7 +88,7 @@ public class CardRepository {
 //                ps.setString(1, card[0].getId());
 //                ps.setString(2, card[0].getName());
 //                ps.setDouble(3, card[0].getDamage());
-//                ps.setString(4, card[4].getElementType().name());
+//                ps.setString(4, card[4].getElementType().name());s
 //                ps.setString(5, card[5].getCategory().name());
                 for (Card card : cards) {
                     ps.setString(1, card.getId());
@@ -73,19 +107,48 @@ public class CardRepository {
     }
 
     public static Card[] update(Card[] cards) {
-        
-//        Card foundCard = null;
-//        for (Card card : cards) {
-//            foundCard = findById(card.getId());
-//        }
-//        // card found in database
-//        if(foundCard != null) {
+        String cardHolder = null;
+        String username = SessionController.user.getUsername();
+        for (Card card : cards) {
+            cardHolder = findCardHolder(card.getCardHolder());
+        }
+
+        // if no user owns the card
+        if(cardHolder == null) {
             // update foreign key (ownership of card)
             String update = "UPDATE cards SET userid = ? WHERE id = ?";
-            try(PreparedStatement ps = conn.prepareStatement(update)) {
+            try (PreparedStatement ps = conn.prepareStatement(update)) {
                 for (Card card : cards) {
-                    ps.setString(1, SessionController.user.getUsername());
+                    ps.setString(1, username);
                     ps.setString(2, card.getId());
+                    ps.execute();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            return cards;
+        }
+        return null;
+    }
+
+    public static ArrayList<Card> showAll(ArrayList<Card> cards) {
+        String cardHolder = null;
+        String username = SessionController.user.getUsername();
+        for (Card card : cards) {
+            cardHolder = findCardHolder(card.getCardHolder());
+        }
+
+        // if FK-key(=username int database) matches logged-in user
+        if (cardHolder == username) {
+            // show all acquired cards of a user
+            String insertCard = "SELECT * FROM cards WHERE userid = ?";
+            try (PreparedStatement ps = conn.prepareStatement(insertCard)) {
+                for (Card card : cards) {
+                    ps.setString(1, card.getId());
+                    ps.setString(2, card.getName());
+                    ps.setDouble(3, card.getDamage());
+                    ps.setString(4, card.getCardHolder());
                     ps.execute();
                 }
 
@@ -94,8 +157,7 @@ public class CardRepository {
                 throw new RuntimeException(e);
             }
             return cards;
-//        }
-//        return null;
+        }
+        return null;
     }
-
 }

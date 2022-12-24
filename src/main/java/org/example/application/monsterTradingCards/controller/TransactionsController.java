@@ -16,6 +16,7 @@ import org.example.server.http.StatusCode;
 import java.util.Arrays;
 
 public class TransactionsController {
+    int packNum = 0;
     private final CardRepository cardRepository;
     public TransactionsController(CardRepository cardRepository) { this.cardRepository = cardRepository; }
     public Response handle(Request request) {
@@ -30,34 +31,28 @@ public class TransactionsController {
 
     private Response acquire(Request request) {
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String json = request.getContent();
-        Card[] stack = PackageController.pack;
         User user = SessionController.user;
-
-//        try {
-//            stack = (objectMapper.readValue(json, Card[].class));
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
+        Card[] stack = PackageController.allCards.get(packNum);
+        System.out.println("STACK: " + stack);
 
         // only logged-in users can acquire packages
-        if(LoginService.authorize(user) != null) { stack = cardRepository.update(stack); }
+        if(LoginService.authorize(user) != null) {
+            if(user.getCoins() != 0) {
+                stack = cardRepository.update(stack);
+                // package costs 5 coins
+                user.setCoins(user.getCoins() - 5);
+                packNum += 1;
+//                System.out.println(packNum);
+            }
+        }
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
         response.setContentType(ContentType.APPLICATION_JSON);
         response.setAuthorization(Authorization.BASIC);
+        // TODO: convert array to string
         String content = null;
         content = Arrays.toString(stack);
-
-//        try {
-//            content = objectMapper.writeValueAsString(stack);
-//            System.out.println(content);
-//
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
         response.setContent(content);
 
         return response;

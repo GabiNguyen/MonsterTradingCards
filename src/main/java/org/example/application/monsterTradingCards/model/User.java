@@ -11,12 +11,13 @@ public class User {
     private String password;
     private int coins;
 
-    private ArrayList<Card> stack;
+//    private ArrayList<Card> stack;
 //    private ArrayList<Card> deck;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        // TODO: coin system not working correctly, amount of coins reset after every login
         this.coins = 20;
     }
 
@@ -39,6 +40,7 @@ public class User {
 //        return "User{" +
 //                "username='" + username + '\'' +
 //                ", password='" + password + '\'' +
+//                ", coins='" + getCoins() + '\'' +
 //                '}';
 //
 //    }

@@ -42,7 +42,7 @@ public class UserMemoryRepository implements UserRepository {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
-            user.setCoins(20);
+//            user.setCoins(20);
             return user;
         }
         return null;
