@@ -33,6 +33,12 @@ public class RequestBuilder {
 
         // TODO: Add additional information to the request
 
+        // Content Type
+        request.setContentType(HttpRegex.findHeaderAsString(requestString, "Content-Type"));
+
+        // Authorization
+        request.setAuthorization(HttpRegex.findHeaderAsString(requestString, "Authorization"));
+
         return request;
     }
 
@@ -55,4 +61,5 @@ public class RequestBuilder {
 
         return path;
     }
+
 }

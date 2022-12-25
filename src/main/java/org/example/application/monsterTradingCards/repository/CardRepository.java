@@ -18,20 +18,24 @@ public class CardRepository {
 
 //    public List<Card> findAll() { return this.cards; }
 
-    public static Card findAll() {
+    public static ArrayList<Card> findAll() {
+        ArrayList<Card> allCards = new ArrayList<Card>();
         String card = "SELECT * FROM cards";
         try(PreparedStatement ps = conn.prepareStatement(card)) {
             try(ResultSet rs = ps.executeQuery()) {
-                if(rs.next()) {
-                    return new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid"));
-                } else {
-                    return null;
+                while(rs.next()) {
+                    allCards.add(new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid")));
+//                    return new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid"));
                 }
+//                else {
+//                    return null;
+//                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return allCards;
     }
 
     public static Card findById(String id) {
@@ -134,30 +138,35 @@ public class CardRepository {
 
     public static ArrayList<Card> showAll(ArrayList<Card> cards) {
         String cardHolder = null;
+        ArrayList<Card> allCardsOfUser = new ArrayList<>();
         String username = SessionController.user.getUsername();
         for (Card card : cards) {
             cardHolder = findCardHolder(card.getCardHolder());
-        }
-
-        // if FK-key(=username int database) matches logged-in user
-        if (cardHolder == username) {
-            // show all acquired cards of a user
-            String insertCard = "SELECT * FROM cards WHERE userid = ?";
-            try (PreparedStatement ps = conn.prepareStatement(insertCard)) {
-                for (Card card : cards) {
-                    ps.setString(1, card.getId());
-                    ps.setString(2, card.getName());
-                    ps.setDouble(3, card.getDamage());
-                    ps.setString(4, card.getCardHolder());
-                    ps.execute();
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
+            // if FK-key(=username int database) matches logged-in user
+            if (cardHolder.equals(username)) {
+                // show all acquired cards of a user
+                allCardsOfUser.add(card);
             }
-            return cards;
         }
-        return null;
+        return allCardsOfUser;
     }
+
+    public static Card[] configure(Card[] cards) {
+        Card foundCard = null;
+        Card[] deck = {};
+
+        for (Card card : cards) {
+            foundCard = findById(card.getId());
+            if (foundCard.equals(card.getId())) {
+                int n = deck.length;
+                Card configuredDeck[] = new Card[n+1];
+                for(int i = 0; i < n; i++) {
+                    configuredDeck[i] = deck[i];
+                }
+                configuredDeck[n] = foundCard;
+            }
+        }
+        return deck;
+    }
+
 }

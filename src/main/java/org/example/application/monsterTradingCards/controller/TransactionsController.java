@@ -36,6 +36,7 @@ public class TransactionsController {
         System.out.println("STACK: " + stack);
 
         // only logged-in users can acquire packages
+        // TODO: change if to match Authorization Header and Token
         if(LoginService.authorize(user) != null) {
             if(user.getCoins() != 0) {
                 stack = cardRepository.update(stack);

@@ -16,7 +16,7 @@ import org.example.server.http.StatusCode;
 import java.util.ArrayList;
 
 public class PackageController {
-    static Card[] pack;
+//    static Card[] pack;
     static ArrayList<Card[]> allCards = new ArrayList<Card[]>();
     private final CardRepository cardRepository;
     public PackageController(CardRepository cardRepository) { this.cardRepository = cardRepository; }
@@ -34,13 +34,13 @@ public class PackageController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-//        Card[] pack;
+        Card[] pack;
         User user = SessionController.user;
 
         try {
             pack = (objectMapper.readValue(json, Card[].class));
             allCards.add(pack);
-            System.out.println(allCards);
+//            System.out.println(allCards);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
