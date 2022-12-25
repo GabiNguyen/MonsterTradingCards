@@ -13,11 +13,12 @@ import org.example.server.http.StatusCode;
 public class MonsterTradingCardsApp implements Application {
 
     private UserController userController;
-    private BattleController battleController;
     private SessionController sessionController;
     private CardController cardController;
     private PackageController packageController;
     private TransactionsController transactionsController;
+    private DeckController deckController;
+    private BattleController battleController;
     private ScoreController scoreController;
     private StatsController statsController;
     private TradingController tradingController;
@@ -30,6 +31,7 @@ public class MonsterTradingCardsApp implements Application {
         this.packageController = new PackageController(cardRepository);
         this.transactionsController = new TransactionsController(cardRepository);
         this.cardController = new CardController(cardRepository);
+        this.deckController = new DeckController(cardRepository);
     }
 
     @Override
@@ -52,6 +54,10 @@ public class MonsterTradingCardsApp implements Application {
 
         if (request.getPath().startsWith("/cards")) {
             return cardController.handle(request);
+        }
+
+        if (request.getPath().startsWith("/deck")) {
+            return deckController.handle(request);
         }
 
         if (request.getPath().startsWith("/battles")) {
