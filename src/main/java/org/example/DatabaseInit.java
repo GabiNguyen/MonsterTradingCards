@@ -42,6 +42,26 @@ public class DatabaseInit {
         );
         stmt2.close();
 
+        // Create decks table
+        Statement stmt3 = conn.createStatement();
+        stmt3.execute(
+                """
+                    CREATE TABLE IF NOT EXISTS decks (
+                        uid VARCHAR(255) PRIMARY KEY,
+                        first VARCHAR(255) NOT NULL,
+                        second VARCHAR(255) NOT NULL,
+                        third VARCHAR(255) NOT NULL,
+                        fourth VARCHAR(255) NOT NULL,
+                        FOREIGN KEY(first) references cards(id),
+                        FOREIGN KEY(second) references cards(id),
+                        FOREIGN KEY(third) references cards(id),
+                        FOREIGN KEY(fourth) references cards(id)
+                        
+                    );
+                    """
+        );
+        stmt3.close();
+
 //        for later  maybe
 //        elementType CHAR(255) NOT NULL,
 //        category CHAR(255) NOT NULL

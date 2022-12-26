@@ -2,6 +2,7 @@ package org.example.application.monsterTradingCards;
 
 import org.example.application.monsterTradingCards.controller.*;
 import org.example.application.monsterTradingCards.repository.CardRepository;
+import org.example.application.monsterTradingCards.repository.DeckRepository;
 import org.example.application.monsterTradingCards.repository.UserRepository;
 import org.example.application.monsterTradingCards.repository.UserMemoryRepository;
 import org.example.server.Application;
@@ -26,12 +27,13 @@ public class MonsterTradingCardsApp implements Application {
     public MonsterTradingCardsApp() {
         UserRepository userRepository = new UserMemoryRepository();
         CardRepository cardRepository = new CardRepository();
+        DeckRepository deckRepository = new DeckRepository();
         this.userController = new UserController(userRepository);
         this.sessionController = new SessionController(userRepository);
         this.packageController = new PackageController(cardRepository);
         this.transactionsController = new TransactionsController(cardRepository);
         this.cardController = new CardController(cardRepository);
-        this.deckController = new DeckController(cardRepository);
+        this.deckController = new DeckController(deckRepository);
     }
 
     @Override

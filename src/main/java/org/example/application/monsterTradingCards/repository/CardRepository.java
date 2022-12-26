@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.example.DatabaseInit.conn;
@@ -19,17 +20,14 @@ public class CardRepository {
 //    public List<Card> findAll() { return this.cards; }
 
     public static ArrayList<Card> findAll() {
-        ArrayList<Card> allCards = new ArrayList<Card>();
+        ArrayList<Card> allCards = new ArrayList<>();
         String card = "SELECT * FROM cards";
         try(PreparedStatement ps = conn.prepareStatement(card)) {
             try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()) {
-                    allCards.add(new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid")));
-//                    return new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid"));
+                    allCards.add(new Card(rs.getString("id"), rs.getString("name"),
+                                          rs.getDouble("damage"), rs.getString("userid")));
                 }
-//                else {
-//                    return null;
-//                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,7 +135,7 @@ public class CardRepository {
     }
 
     public static ArrayList<Card> showAll(ArrayList<Card> cards) {
-        String cardHolder = null;
+        String cardHolder;
         ArrayList<Card> allCardsOfUser = new ArrayList<>();
         String username = SessionController.user.getUsername();
         for (Card card : cards) {
@@ -149,24 +147,6 @@ public class CardRepository {
             }
         }
         return allCardsOfUser;
-    }
-
-    public static Card[] configure(Card[] cards) {
-        Card foundCard = null;
-        Card[] deck = {};
-
-        for (Card card : cards) {
-            foundCard = findById(card.getId());
-            if (foundCard.equals(card.getId())) {
-                int n = deck.length;
-                Card configuredDeck[] = new Card[n+1];
-                for(int i = 0; i < n; i++) {
-                    configuredDeck[i] = deck[i];
-                }
-                configuredDeck[n] = foundCard;
-            }
-        }
-        return deck;
     }
 
 }
