@@ -24,11 +24,13 @@ public class Card {
         this.cardHolder = cardHolder;
     }
 
+    public Card(String id) {
+        this.id = id;
+    }
+
     public Card() {}
 
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
 
     public void setId(String id) { this.id = id; }
 

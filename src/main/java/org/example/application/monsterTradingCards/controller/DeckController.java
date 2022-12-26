@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.application.monsterTradingCards.model.Card;
 import org.example.application.monsterTradingCards.model.User;
 import org.example.application.monsterTradingCards.repository.CardRepository;
+import org.example.application.monsterTradingCards.repository.DeckRepository;
 import org.example.application.monsterTradingCards.service.LoginService;
 import org.example.server.dto.Request;
 import org.example.server.dto.Response;
@@ -14,12 +15,10 @@ import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class DeckController {
-    private final CardRepository cardRepository;
-    public DeckController(CardRepository cardRepository) { this.cardRepository = cardRepository; }
-    User user = SessionController.user;
+    private final DeckRepository deckRepository;
+    public DeckController(DeckRepository deckRepository) { this.deckRepository = deckRepository; }
     Card[] deck;
 
     public Response handle(Request request) {
@@ -35,12 +34,12 @@ public class DeckController {
     }
 
     private Response readDeck(Request request) {
+        String username = SessionController.user.getUsername();
+        Card[] deck;
 
-        if(request.getAuthorization().equals(LoginService.authorize(user))) {
-            for (Card card : deck) {
-                deck = new Card[]{cardRepository.findById(card.getId())};
-            }
-        }
+        //TODO: error handling if there is no deck yet (return null or sth)
+        deck = deckRepository.findDeck(username);
+
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
         response.setContentType(ContentType.APPLICATION_JSON);
@@ -49,7 +48,7 @@ public class DeckController {
         ArrayList<String> cardsContent = new ArrayList<>();
 
         for(int i = 0; i < deck.length; i++) {
-            cardsContent.add("\r\n" + "Deck {" +
+            cardsContent.add("\r\n" + "Card {" +
                     "Id = '" + deck[i].getId() + '\'' +
                     ", Name = '" + deck[i].getName() + '\'' +
                     ", Damage = '" + deck[i].getDamage() + '\'' +
@@ -63,13 +62,11 @@ public class DeckController {
     }
 
     private Response configure(Request request) {
+        User user = SessionController.user;
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-//        Card[] deck;
-//        User user = SessionController.user;
 
-        //TODO: only array of strings has to be read
         try {
             deck = objectMapper.readValue(json, Card[].class);
         } catch (JsonProcessingException e) {
@@ -77,14 +74,14 @@ public class DeckController {
         }
 
         if(request.getAuthorization().equals(LoginService.authorize(user))) {
-            deck = cardRepository.configure(deck);
+            deck = deckRepository.configure(deck);
         }
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
         response.setContentType(ContentType.APPLICATION_JSON);
         response.setAuthorization(Authorization.BASIC);
-        String content = null;
+        String content;
         try {
             content = objectMapper.writeValueAsString(deck);
         } catch (JsonProcessingException e) {

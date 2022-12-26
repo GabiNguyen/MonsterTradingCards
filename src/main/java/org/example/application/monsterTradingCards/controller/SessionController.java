@@ -50,6 +50,11 @@ public class SessionController {
         // -> should be able to do sth regardless when last logged in
         // check if authorization header and token matches
         user = LoginService.login(user);
+//        if (user != null) {
+//            HttpSession session = request.getSession();
+//            session.setMaxInactiveInterval(100);
+//        }
+
 //        // user could log in -> use user of UserController (temporary fix for coins)
 //        if(user != null) { user = UserController.user;}
 
