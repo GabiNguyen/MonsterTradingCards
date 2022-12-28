@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.DatabaseInit.conn;
+import static org.example.application.monsterTradingCards.controller.SessionController.user;
 
 public class UserMemoryRepository implements UserRepository {
 
@@ -46,6 +47,42 @@ public class UserMemoryRepository implements UserRepository {
             return user;
         }
         return null;
+    }
+
+    // method to get user data
+    public User findAll(String username) {
+        String getUserData = "SELECT * FROM users WHERE username = ?";
+        try (PreparedStatement ps = conn.prepareStatement(getUserData)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new User(rs.getString("username"), rs.getString("password"),
+                                    rs.getString("name"), rs.getString("bio"),
+                                    rs.getString("image"));
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    // maybe change parameters later
+    public User editData(User user, String username) {
+        String update = "UPDATE users SET name = ?, bio = ?, image = ? WHERE username = ?";
+        try (PreparedStatement ps = conn.prepareStatement(update)) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getBio());
+            ps.setString(3, user.getImage());
+            ps.setString(4, username);
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return user;
     }
 
 //    public User authorize(User user) {
@@ -109,8 +146,8 @@ public class UserMemoryRepository implements UserRepository {
 
     public UserMemoryRepository() { this.users = new ArrayList<>(); }
 
-    @Override
-    public List<User> findAll() { return this.users; }
+//    @Override
+//    public List<User> findAll() { return this.users; }
 
 //    @Override
 //    public User delete(User user) {

@@ -37,7 +37,7 @@ public class DeckController {
         String username = SessionController.user.getUsername();
         Card[] deck;
 
-        //TODO: error handling if there is no deck yet (return null or sth)
+        // TODO: error handling if there is no deck yet (return null or sth)
         deck = deckRepository.findDeck(username);
 
         Response response = new Response();
@@ -47,14 +47,21 @@ public class DeckController {
         String content;
         ArrayList<String> cardsContent = new ArrayList<>();
 
-        for(int i = 0; i < deck.length; i++) {
-            cardsContent.add("\r\n" + "Card {" +
-                    "Id = '" + deck[i].getId() + '\'' +
-                    ", Name = '" + deck[i].getName() + '\'' +
-                    ", Damage = '" + deck[i].getDamage() + '\'' +
-                    '}');
+        // check if deck is empty
+        if(deck == null) {
+            cardsContent.add("Deck is not configured yet!");
+//            cardsContent = null;
+        } else {
+            for(int i = 0; i < deck.length; i++) {
+                cardsContent.add("\r\n" + "Card {" +
+                                "Id = '" + deck[i].getId() + '\'' +
+                                ", Name = '" + deck[i].getName() + '\'' +
+                                ", Damage = '" + deck[i].getDamage() + '\'' +
+                                '}');
+            }
+            cardsContent.add("\r\n");
         }
-        cardsContent.add("\r\n");
+
         content = String.valueOf(cardsContent);
         response.setContent(content);
 

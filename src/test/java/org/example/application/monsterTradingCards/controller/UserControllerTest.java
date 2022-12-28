@@ -32,7 +32,7 @@ class UserControllerTest {
         users.add(new User("nico.lerchl", "otis"));
         users.add(new User("janko.hu", "catss"));
 
-        when(userRepository.findAll()).thenReturn(users);
+//        when(userRepository.findAll()).thenReturn(users);
 
         //houseRepository = new HouseMemoryRepository();
         userController = new org.example.application.monsterTradingCards.controller.UserController(userRepository);

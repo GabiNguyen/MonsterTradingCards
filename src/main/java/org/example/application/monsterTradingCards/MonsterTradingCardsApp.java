@@ -1,10 +1,7 @@
 package org.example.application.monsterTradingCards;
 
 import org.example.application.monsterTradingCards.controller.*;
-import org.example.application.monsterTradingCards.repository.CardRepository;
-import org.example.application.monsterTradingCards.repository.DeckRepository;
-import org.example.application.monsterTradingCards.repository.UserRepository;
-import org.example.application.monsterTradingCards.repository.UserMemoryRepository;
+import org.example.application.monsterTradingCards.repository.*;
 import org.example.server.Application;
 import org.example.server.dto.Request;
 import org.example.server.dto.Response;
@@ -28,12 +25,15 @@ public class MonsterTradingCardsApp implements Application {
         UserRepository userRepository = new UserMemoryRepository();
         CardRepository cardRepository = new CardRepository();
         DeckRepository deckRepository = new DeckRepository();
+        StatsRepository statsRepository = new StatsRepository();
         this.userController = new UserController(userRepository);
         this.sessionController = new SessionController(userRepository);
         this.packageController = new PackageController(cardRepository);
         this.transactionsController = new TransactionsController(cardRepository);
         this.cardController = new CardController(cardRepository);
         this.deckController = new DeckController(deckRepository);
+        this.statsController = new StatsController(statsRepository);
+        this.scoreController = new ScoreController(statsRepository);
     }
 
     @Override
@@ -67,11 +67,11 @@ public class MonsterTradingCardsApp implements Application {
         }
 
         if (request.getPath().startsWith("/score")) {
-            return userController.handle(request);
+            return scoreController.handle(request);
         }
 
         if (request.getPath().startsWith("/stats")) {
-            return userController.handle(request);
+            return statsController.handle(request);
         }
 
         if (request.getPath().startsWith("/tradings")) {
