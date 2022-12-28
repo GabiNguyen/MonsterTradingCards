@@ -10,6 +10,9 @@ public class User {
     private String username;
     private String password;
     private int coins;
+    private String name;
+    private String bio;
+    private String image;
 
 //    private ArrayList<Card> stack;
 //    private ArrayList<Card> deck;
@@ -19,6 +22,14 @@ public class User {
         this.password = password;
         // TODO: coin system not working correctly, amount of coins reset after every login
         this.coins = 20;
+    }
+
+    public User(String username, String password, String name, String bio, String image) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.bio = bio;
+        this.image = image;
     }
 
     public User() {}
@@ -34,6 +45,17 @@ public class User {
     public int getCoins() { return coins; }
 
     public void setCoins(int coins) { this.coins = coins; }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getBio() { return bio; }
+
+    public void setBio(String bio) { this.bio = bio; }
+    public String getImage() { return image; }
+
+    public void setImage(String image) { this.image = image; }
 
 //    @Override
 //    public String toString() {

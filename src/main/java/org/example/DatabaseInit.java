@@ -21,7 +21,10 @@ public class DatabaseInit {
                 """
                     CREATE TABLE IF NOT EXISTS users (
                         username VARCHAR(255) PRIMARY KEY,
-                        password VARCHAR(255) NOT NULL
+                        password VARCHAR(255) NOT NULL,
+                        name VARCHAR(255),
+                        bio VARCHAR(255),
+                        image VARCHAR(255)
                     );
                     """
         );
@@ -41,6 +44,10 @@ public class DatabaseInit {
                     """
         );
         stmt2.close();
+
+//        for later  maybe
+//        elementType CHAR(255) NOT NULL,
+//        category CHAR(255) NOT NULL
 
         // Create decks table
         Statement stmt3 = conn.createStatement();
@@ -62,8 +69,23 @@ public class DatabaseInit {
         );
         stmt3.close();
 
-//        for later  maybe
-//        elementType CHAR(255) NOT NULL,
-//        category CHAR(255) NOT NULL
+        // Create stats table
+        Statement stmt4 = conn.createStatement();
+        stmt4.execute(
+                """
+                    CREATE TABLE IF NOT EXISTS stats (
+                        id VARCHAR(255) PRIMARY KEY,
+                        uid VARCHAR(255),
+                        FOREIGN KEY(uid) references users(username),
+                        win INT NOT NULL,
+                        loss INT NOT NULL,
+                        games INT NOT NULL,
+                        elo INT NOT NULL
+                        
+                    );
+                    """
+        );
+        stmt4.close();
+
     }
 }

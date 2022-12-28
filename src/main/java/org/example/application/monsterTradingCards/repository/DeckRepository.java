@@ -40,8 +40,10 @@ public class DeckRepository {
 //        return deck;
 //    }
 
+    // method to get id of cards in the deck table
     public static Card[] deck(String uid) {
         Card[] deck = new Card[4];
+        // cards in deck start in 2nd column
         int cardNum = 2;
         String findCardInDeck = "SELECT * FROM decks WHERE uid = ?";
         try(PreparedStatement ps = conn.prepareStatement(findCardInDeck)) {
@@ -63,11 +65,16 @@ public class DeckRepository {
         return deck;
     }
 
+    // method to get all information about a card and put it in an array
     public static Card[] findDeck(String uid) {
         Card[] deckOfCardsId = deck(uid);
         Card[] deck = new Card[4];
         String id = null;
         int i = 0;
+
+        // check if deck is empty
+        if(deckOfCardsId[0] == null) { return null; }
+
         for (Card card: deckOfCardsId) {
             id = card.getId();
             String showDeck = "SELECT * FROM cards WHERE id = ? AND userid = ?";
