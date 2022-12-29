@@ -22,6 +22,7 @@ public class DatabaseInit {
                     CREATE TABLE IF NOT EXISTS users (
                         username VARCHAR(255) PRIMARY KEY,
                         password VARCHAR(255) NOT NULL,
+                        coins INT NOT NULL,
                         name VARCHAR(255),
                         bio VARCHAR(255),
                         image VARCHAR(255)
@@ -30,9 +31,21 @@ public class DatabaseInit {
         );
         stmt1.close();
 
-        // Create cards table
+        // Create session table
         Statement stmt2 = conn.createStatement();
         stmt2.execute(
+                """
+                    CREATE TABLE IF NOT EXISTS sessions (
+                        uid VARCHAR(255) PRIMARY KEY,
+                        token VARCHAR(255) NOT NULL 
+                    );
+                    """
+        );
+        stmt2.close();
+
+        // Create cards table
+        Statement stmt3 = conn.createStatement();
+        stmt3.execute(
                 """
                     CREATE TABLE IF NOT EXISTS cards (
                         id VARCHAR(255) PRIMARY KEY,
@@ -43,15 +56,31 @@ public class DatabaseInit {
                     );
                     """
         );
-        stmt2.close();
+        stmt3.close();
+
+        // Create packages table
+        Statement stmt4 = conn.createStatement();
+        stmt4.execute(
+                """
+                    CREATE TABLE IF NOT EXISTS packages (
+                        id serial PRIMARY KEY,
+                        card1 VARCHAR(255) NOT NULL,
+                        card2 VARCHAR(255) NOT NULL,
+                        card3 VARCHAR(255) NOT NULL,
+                        card4 VARCHAR(255) NOT NULL,
+                        card5 VARCHAR(255) NOT NULL
+                    );
+                    """
+        );
+        stmt4.close();
 
 //        for later  maybe
 //        elementType CHAR(255) NOT NULL,
 //        category CHAR(255) NOT NULL
 
         // Create decks table
-        Statement stmt3 = conn.createStatement();
-        stmt3.execute(
+        Statement stmt5 = conn.createStatement();
+        stmt5.execute(
                 """
                     CREATE TABLE IF NOT EXISTS decks (
                         uid VARCHAR(255) PRIMARY KEY,
@@ -67,16 +96,14 @@ public class DatabaseInit {
                     );
                     """
         );
-        stmt3.close();
+        stmt5.close();
 
         // Create stats table
-        Statement stmt4 = conn.createStatement();
-        stmt4.execute(
+        Statement stmt6 = conn.createStatement();
+        stmt6.execute(
                 """
                     CREATE TABLE IF NOT EXISTS stats (
-                        id VARCHAR(255) PRIMARY KEY,
-                        uid VARCHAR(255),
-                        FOREIGN KEY(uid) references users(username),
+                        uid VARCHAR(255) PRIMARY KEY,
                         win INT NOT NULL,
                         loss INT NOT NULL,
                         games INT NOT NULL,
@@ -85,7 +112,7 @@ public class DatabaseInit {
                     );
                     """
         );
-        stmt4.close();
+        stmt6.close();
 
     }
 }

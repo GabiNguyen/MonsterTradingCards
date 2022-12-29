@@ -3,8 +3,10 @@ package org.example.application.monsterTradingCards.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.application.monsterTradingCards.model.Card;
+import org.example.application.monsterTradingCards.model.Package;
 import org.example.application.monsterTradingCards.model.User;
 import org.example.application.monsterTradingCards.repository.CardRepository;
+import org.example.application.monsterTradingCards.repository.PackageRepository;
 import org.example.application.monsterTradingCards.service.LoginService;
 import org.example.server.dto.Request;
 import org.example.server.dto.Response;
@@ -16,10 +18,12 @@ import org.example.server.http.StatusCode;
 import java.util.ArrayList;
 
 public class PackageController {
-//    static Card[] pack;
-    static ArrayList<Card[]> allCards = new ArrayList<Card[]>();
     private final CardRepository cardRepository;
-    public PackageController(CardRepository cardRepository) { this.cardRepository = cardRepository; }
+    private final PackageRepository packageRepository;
+    public PackageController(CardRepository cardRepository, PackageRepository packageRepository) {
+        this.cardRepository = cardRepository;
+        this.packageRepository = packageRepository;
+    }
     public Response handle(Request request) {
         if (request.getMethod().equals(Method.POST.method)) { return create(request); }
         Response response = new Response();
@@ -34,19 +38,22 @@ public class PackageController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-        Card[] pack;
-        User user = SessionController.user;
+        Card[] cards;
+        Package pack;
+        String authorization = request.getAuthorization();
 
         try {
-            pack = (objectMapper.readValue(json, Card[].class));
-            allCards.add(pack);
-//            System.out.println(allCards);
+            cards = (objectMapper.readValue(json, Card[].class));
+            pack = new Package(cards[0].getId(), cards[1].getId(), cards[2].getId(), cards[3].getId(), cards[4].getId());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
         // TODO: error handling if user isn't logged-in (user == null)
         // only admin can create packages (save it to the database)
-        if(LoginService.authorize(user).equals("Basic admin-mtcgToken")) { pack = cardRepository.save(pack); }
+        if(authorization.equals("Basic admin-mtcgToken")) {
+            cards = cardRepository.save(cards);
+            pack = packageRepository.save(pack);
+        }
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
@@ -55,8 +62,7 @@ public class PackageController {
         String content = null;
 
         try {
-            content = objectMapper.writeValueAsString(pack);
-//            System.out.println(content);
+            content = objectMapper.writeValueAsString(cards);
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

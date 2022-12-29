@@ -2,6 +2,8 @@ package org.example.application.monsterTradingCards.repository;
 
 import org.example.application.monsterTradingCards.controller.SessionController;
 import org.example.application.monsterTradingCards.model.Card;
+import org.example.application.monsterTradingCards.model.Package;
+import org.example.application.monsterTradingCards.model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -108,9 +110,10 @@ public class CardRepository {
         return null;
     }
 
-    public static Card[] update(Card[] cards) {
+    public static Card[] update(Card[] cards, User sessionUser) {
         String cardHolder = null;
-        String username = SessionController.user.getUsername();
+//        String username = SessionController.user.getUsername();
+        String username = sessionUser.getUsername();
         for (Card card : cards) {
             cardHolder = findCardHolder(card.getCardHolder());
         }

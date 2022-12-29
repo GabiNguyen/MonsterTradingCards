@@ -18,11 +18,11 @@ public class LoginService {
             ps.setString(2, user.getPassword());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    // temporary fix because coins don't get initialize in the constructor and persist
-//                    user.setCoins(20);
                     // credentials are right
                     authorize(user);
-                    return user;
+                    return new User(rs.getString("username"), rs.getString("password"),
+                                    rs.getInt("coins"), rs.getString("name"),
+                                    rs.getString("bio"), rs.getString("image"));
                 } else {
                     return null;
                 }
@@ -33,9 +33,35 @@ public class LoginService {
         }
     }
 
-    public static String authorize(User user) {
+    public static User authorize(User user) {
         token = "Basic " + user.getUsername() + "-mtcgToken";
-//        System.out.println(token);
-        return token;
+        String auhthorization = "INSERT INTO sessions (uid, token) VALUES (?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(auhthorization)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, token);
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return user;
     }
+
+    public static User checkToken(String token) {
+        String findToken = "SELECT * FROM sessions WHERE token = ?";
+        try (PreparedStatement ps = conn.prepareStatement(findToken)) {
+            ps.setString(1, token);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new User(rs.getString("uid"), rs.getString("token"));
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
 }

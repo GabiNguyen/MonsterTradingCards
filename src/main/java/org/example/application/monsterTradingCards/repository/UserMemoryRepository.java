@@ -33,17 +33,19 @@ public class UserMemoryRepository implements UserRepository {
         User foundUser = findByUsername(user.getUsername());
         // user not found in database (-> insert user)
         if(foundUser == null) {
+            // user gets 20 coins when registered
+            user.setCoins(20);
             // insert new user
-            String insertUser = "INSERT INTO users (username, password) VALUES (?, ?)";
+            String insertUser = "INSERT INTO users (username, password, coins) VALUES (?, ?, ?)";
             try(PreparedStatement ps = conn.prepareStatement(insertUser)) {
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getPassword());
+                ps.setInt(3, user.getCoins());
                 ps.execute();
             } catch (SQLException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
-//            user.setCoins(20);
             return user;
         }
         return null;
@@ -57,8 +59,8 @@ public class UserMemoryRepository implements UserRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new User(rs.getString("username"), rs.getString("password"),
-                                    rs.getString("name"), rs.getString("bio"),
-                                    rs.getString("image"));
+                            rs.getInt("coins"), rs.getString("name"),
+                            rs.getString("bio"), rs.getString("image"));
                 } else {
                     return null;
                 }
@@ -67,6 +69,26 @@ public class UserMemoryRepository implements UserRepository {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public int updateCoins(User user) {
+        String updateCoins = "UPDATE users SET coins = ? WHERE username = ?";
+        try (PreparedStatement ps = conn.prepareStatement(updateCoins)) {
+            ps.setInt(1, user.getCoins()-5);
+            ps.setString(2, user.getUsername());
+            ps.execute();
+//            try (ResultSet rs = ps.executeQuery()) {
+//                if (rs.next()) {
+//                    return rs.getInt("coins");
+//                } else {
+//                    return -1;
+//                }
+//            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return user.getCoins();
     }
 
     // maybe change parameters later
