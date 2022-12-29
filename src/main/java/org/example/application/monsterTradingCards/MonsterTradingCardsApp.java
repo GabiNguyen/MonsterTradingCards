@@ -24,12 +24,14 @@ public class MonsterTradingCardsApp implements Application {
     public MonsterTradingCardsApp() {
         UserRepository userRepository = new UserMemoryRepository();
         CardRepository cardRepository = new CardRepository();
+        PackageRepository packageRepository = new PackageRepository();
         DeckRepository deckRepository = new DeckRepository();
         StatsRepository statsRepository = new StatsRepository();
+
         this.userController = new UserController(userRepository);
         this.sessionController = new SessionController(userRepository);
-        this.packageController = new PackageController(cardRepository);
-        this.transactionsController = new TransactionsController(cardRepository);
+        this.packageController = new PackageController(cardRepository, packageRepository);
+        this.transactionsController = new TransactionsController(cardRepository, userRepository);
         this.cardController = new CardController(cardRepository);
         this.deckController = new DeckController(deckRepository);
         this.statsController = new StatsController(statsRepository);

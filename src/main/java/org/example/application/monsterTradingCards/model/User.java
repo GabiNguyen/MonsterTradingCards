@@ -9,6 +9,7 @@ public class User {
 
     private String username;
     private String password;
+    private String token;
     private int coins;
     private String name;
     private String bio;
@@ -17,16 +18,16 @@ public class User {
 //    private ArrayList<Card> stack;
 //    private ArrayList<Card> deck;
 
-    public User(String username, String password) {
+    public User(String username, String token) {
         this.username = username;
-        this.password = password;
+        this.token = token;
         // TODO: coin system not working correctly, amount of coins reset after every login
-        this.coins = 20;
     }
 
-    public User(String username, String password, String name, String bio, String image) {
+    public User(String username, String password, int coins, String name, String bio, String image) {
         this.username = username;
         this.password = password;
+        this.coins = coins;
         this.name = name;
         this.bio = bio;
         this.image = image;
@@ -41,6 +42,9 @@ public class User {
     public String getPassword() { return password; }
 
     public void setPassword(String password) { this.password = password; }
+    public String getToken() { return token; }
+
+    public void setToken(String token) { this.token = token; }
 
     public int getCoins() { return coins; }
 

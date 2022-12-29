@@ -8,6 +8,7 @@ public interface UserRepository {
 
 //    List<User> findAll();
     User findAll(String username);
+    int updateCoins(User user);
     User findByUsername(String username);
     User save(User user);
 
