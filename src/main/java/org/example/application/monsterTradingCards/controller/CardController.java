@@ -31,13 +31,13 @@ public class CardController {
     }
     private Response readAll(Request request) {
 
-        User user = SessionController.user;
+        String authHeader = request.getAuthorization();
+        User sessionUser = LoginService.checkToken(authHeader);
         ArrayList<Card> allCards = cardRepository.findAll();
         ArrayList<Card> allCardsOfUser = null;
 
-        // LoginService.authorize(user) != null
-        if(request.getAuthorization().equals(LoginService.authorize(user))) {
-            allCardsOfUser = cardRepository.showAll(allCards);
+        if(sessionUser != null) {
+            allCardsOfUser = cardRepository.showAll(allCards, sessionUser);
         }
         // TODO: error handling if there is no token
 

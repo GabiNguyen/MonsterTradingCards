@@ -1,5 +1,6 @@
 package org.example.application.monsterTradingCards.repository;
 
+import org.example.application.monsterTradingCards.model.Package;
 import org.example.application.monsterTradingCards.model.User;
 
 import java.sql.*;
@@ -7,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.DatabaseInit.conn;
-import static org.example.application.monsterTradingCards.controller.SessionController.user;
 
 public class UserMemoryRepository implements UserRepository {
 
@@ -70,35 +70,29 @@ public class UserMemoryRepository implements UserRepository {
             throw new RuntimeException(e);
         }
     }
-
-    public int updateCoins(User user) {
-        String updateCoins = "UPDATE users SET coins = ? WHERE username = ?";
-        try (PreparedStatement ps = conn.prepareStatement(updateCoins)) {
-            ps.setInt(1, user.getCoins()-5);
-            ps.setString(2, user.getUsername());
-            ps.execute();
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (rs.next()) {
-//                    return rs.getInt("coins");
-//                } else {
-//                    return -1;
-//                }
-//            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+    public void updateCoins(User user) {
+        int coins = PackageRepository.getCoins(user);
+        if(coins > 0) {
+            String updateCoins = "UPDATE users SET coins = ? WHERE username = ?";
+            try (PreparedStatement ps = conn.prepareStatement(updateCoins)) {
+                ps.setInt(1, coins - 5);
+                ps.setString(2, user.getUsername());
+                ps.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
-        return user.getCoins();
     }
 
     // maybe change parameters later
-    public User editData(User user, String username) {
+    public User editData(User user, User sessionUser) {
         String update = "UPDATE users SET name = ?, bio = ?, image = ? WHERE username = ?";
         try (PreparedStatement ps = conn.prepareStatement(update)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getBio());
             ps.setString(3, user.getImage());
-            ps.setString(4, username);
+            ps.setString(4, sessionUser.getUsername());
             ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();

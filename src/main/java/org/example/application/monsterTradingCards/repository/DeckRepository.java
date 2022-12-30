@@ -3,6 +3,7 @@ package org.example.application.monsterTradingCards.repository;
 import org.example.application.monsterTradingCards.controller.SessionController;
 import org.example.application.monsterTradingCards.model.Card;
 import org.example.application.monsterTradingCards.model.Deck;
+import org.example.application.monsterTradingCards.model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -98,9 +99,7 @@ public class DeckRepository {
         return deck;
     }
 
-
-    public static Card[] configure(Card[] cards) {
-        String username = SessionController.user.getUsername();
+    public static Card[] configure(Card[] cards, User sessionUser) {
         Card foundCard;
         Card[] configuredDeck = new Card[4];
         int i = 0;
@@ -108,8 +107,10 @@ public class DeckRepository {
             for (Card card : cards) {
                 foundCard = findById(card.getId());
                 // gets in if id of found card in database and card id of passed content matches and if cards of deck are in packages of user
-                if (foundCard.getId().equals(card.getId()) && foundCard.getCardHolder().equals(username)) {
+                if (foundCard.getId().equals(card.getId()) && foundCard.getCardHolder().equals(sessionUser.getUsername())) {
                     configuredDeck[i] = foundCard;
+                } else {
+                    return null;
                 }
                 i++;
             }

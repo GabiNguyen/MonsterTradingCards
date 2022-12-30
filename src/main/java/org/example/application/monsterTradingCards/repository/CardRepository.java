@@ -110,41 +110,68 @@ public class CardRepository {
         return null;
     }
 
-    public static Card[] update(Card[] cards, User sessionUser) {
-        String cardHolder = null;
-//        String username = SessionController.user.getUsername();
-        String username = sessionUser.getUsername();
-        for (Card card : cards) {
-            cardHolder = findCardHolder(card.getCardHolder());
+//    public static ArrayList<Card> update(ArrayList<Card> cards, User sessionUser) {
+//        String cardHolder = null;
+//        String username = sessionUser.getUsername();
+//
+//        for (Card card : cards) {
+//            cardHolder = findCardHolder(card.getCardHolder());
+//        }
+//
+//        // if no user owns the card
+//        if(cardHolder == null) {
+//            // update foreign key (ownership of card)
+//            String update = "UPDATE cards SET userid = ? WHERE id = ?";
+//            try (PreparedStatement ps = conn.prepareStatement(update)) {
+//                for (Card card : cards) {
+//                    ps.setString(1, username);
+//                    ps.setString(2, card.getId());
+//                    ps.execute();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//                throw new RuntimeException(e);
+//            }
+//            return cards;
+//        }
+//        return null;
+//    }
+
+    public static ArrayList<Card> update(Package pack, User sessionUser) {
+        ArrayList<String> cardIds = new ArrayList<>();
+        cardIds.add(pack.getCard1());
+        cardIds.add(pack.getCard2());
+        cardIds.add(pack.getCard3());
+        cardIds.add(pack.getCard4());
+        cardIds.add(pack.getCard5());
+
+        ArrayList<Card> cards = new ArrayList<>();
+        for (String cardId : cardIds) {
+            cards.add(findById(cardId));
         }
 
-        // if no user owns the card
-        if(cardHolder == null) {
-            // update foreign key (ownership of card)
-            String update = "UPDATE cards SET userid = ? WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(update)) {
-                for (Card card : cards) {
-                    ps.setString(1, username);
-                    ps.setString(2, card.getId());
-                    ps.execute();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
+        // update foreign key (ownership of card)
+        String update = "UPDATE cards SET userid = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(update)) {
+            for (String cardId : cardIds) {
+                ps.setString(1, sessionUser.getUsername());
+                ps.setString(2, cardId);
+                ps.execute();
             }
-            return cards;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
+        return cards;
     }
 
-    public static ArrayList<Card> showAll(ArrayList<Card> cards) {
+    public static ArrayList<Card> showAll(ArrayList<Card> cards, User sessionUser) {
         String cardHolder;
         ArrayList<Card> allCardsOfUser = new ArrayList<>();
-        String username = SessionController.user.getUsername();
         for (Card card : cards) {
             cardHolder = findCardHolder(card.getCardHolder());
             // if FK-key(=username int database) matches logged-in user
-            if (cardHolder.equals(username)) {
+            if (cardHolder != null && cardHolder.equals(sessionUser.getUsername())) {
                 // show all acquired cards of a user
                 allCardsOfUser.add(card);
             }

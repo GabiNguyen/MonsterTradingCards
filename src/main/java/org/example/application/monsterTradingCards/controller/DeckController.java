@@ -34,11 +34,14 @@ public class DeckController {
     }
 
     private Response readDeck(Request request) {
-        String username = SessionController.user.getUsername();
-        Card[] deck;
+        String authHeader = request.getAuthorization();
+        User sessionUser = LoginService.checkToken(authHeader);
+        Card[] deck = null;
 
         // TODO: error handling if there is no deck yet (return null or sth)
-        deck = deckRepository.findDeck(username);
+        if(sessionUser != null) {
+            deck = deckRepository.findDeck(sessionUser.getUsername());
+        }
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
@@ -69,7 +72,8 @@ public class DeckController {
     }
 
     private Response configure(Request request) {
-        User user = SessionController.user;
+        String authHeader = request.getAuthorization();
+        User sessionUser = LoginService.checkToken(authHeader);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
@@ -80,8 +84,8 @@ public class DeckController {
             throw new RuntimeException(e);
         }
 
-        if(request.getAuthorization().equals(LoginService.authorize(user))) {
-            deck = deckRepository.configure(deck);
+        if(sessionUser != null) {
+            deck = deckRepository.configure(deck, sessionUser);
         }
 
         Response response = new Response();
@@ -90,7 +94,13 @@ public class DeckController {
         response.setAuthorization(Authorization.BASIC);
         String content;
         try {
-            content = objectMapper.writeValueAsString(deck);
+            // return original deck if request fails
+            if (deck == null) {
+                response = readDeck(request);
+                return response;
+            } else {
+                content = objectMapper.writeValueAsString(deck);
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

@@ -8,10 +8,10 @@ public interface UserRepository {
 
 //    List<User> findAll();
     User findAll(String username);
-    int updateCoins(User user);
+    void updateCoins(User user);
     User findByUsername(String username);
     User save(User user);
 
-    User editData(User user, String username);
+    User editData(User user, User sessionUser);
     //User delete(User user);
 }
