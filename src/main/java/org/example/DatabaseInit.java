@@ -68,7 +68,8 @@ public class DatabaseInit {
                         card2 VARCHAR(255) NOT NULL,
                         card3 VARCHAR(255) NOT NULL,
                         card4 VARCHAR(255) NOT NULL,
-                        card5 VARCHAR(255) NOT NULL
+                        card5 VARCHAR(255) NOT NULL,
+                        acquired BOOLEAN NOT NULL 
                     );
                     """
         );

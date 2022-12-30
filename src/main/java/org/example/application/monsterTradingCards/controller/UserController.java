@@ -59,9 +59,9 @@ public class UserController {
     }
 
     private Response readAll(Request request) {
+        String authHeader = request.getAuthorization();
+        User sessionUser = LoginService.checkToken(authHeader);
         ObjectMapper objectMapper = new ObjectMapper();
-//        String username = SessionController.user.getUsername();
-        User user = SessionController.user;
 
         Response response = new Response();
         response.setStatusCode(StatusCode.OK);
@@ -70,8 +70,8 @@ public class UserController {
         try {
             // gets only in if path ends with logged-in user and if authorization header equals token of logged-in user
             // maybe not smart to check if path is correct in this part of code :/
-            if(request.getPath().endsWith("/" + user.getUsername()) && request.getAuthorization().equals(LoginService.authorize(user))) {
-                content = objectMapper.writeValueAsString(userRepository.findAll(user.getUsername()));
+            if(sessionUser != null && request.getPath().endsWith("/" + sessionUser.getUsername())) {
+                content = objectMapper.writeValueAsString(userRepository.findAll(sessionUser.getUsername()));
             } else {
                 content = "Not authorized to do this action!";
             }
@@ -84,11 +84,12 @@ public class UserController {
     }
 
     private Response editData(Request request) {
+
+        String authHeader = request.getAuthorization();
+        User sessionUser = LoginService.checkToken(authHeader);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-        String username = SessionController.user.getUsername();
         User user;
-        User sessionUser = SessionController.user;
 
         try {
             user = objectMapper.readValue(json, User.class);
@@ -96,8 +97,8 @@ public class UserController {
             throw new RuntimeException(e);
         }
 
-        if(request.getPath().endsWith("/" + username) && request.getAuthorization().equals(LoginService.authorize(sessionUser))) {
-            user = userRepository.editData(user, username);
+        if(sessionUser != null && request.getPath().endsWith("/" + sessionUser.getUsername())) {
+            user = userRepository.editData(user, sessionUser);
         } else {
             user = null;
         }
