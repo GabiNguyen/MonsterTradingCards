@@ -56,7 +56,7 @@ public class PackageRepository {
     public static ArrayList<Package> findByAvailability() {
         ArrayList<Package> packages = new ArrayList<>();
         // check if the package is already acquired:
-        String findCard = "SELECT * FROM packages WHERE acquired = ?";
+        String findCard = "SELECT * FROM packages WHERE acquired = ? ORDER BY id";
         try(PreparedStatement ps = conn.prepareStatement(findCard)) {
             ps.setBoolean(1, false);
             try(ResultSet rs = ps.executeQuery()) {
@@ -91,8 +91,8 @@ public class PackageRepository {
     public static Package updateAcquiredStatus(ArrayList<Package> packages, User sessionUser) {
 
         if (getCoins(sessionUser) > 0) {
-            String update = "UPDATE packages SET acquired = ? WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(update)) {
+            String query = "UPDATE packages SET acquired = ? WHERE id = ?";
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
                 ps.setBoolean(1, true);
                 // get first available package in packages array
                 ps.setInt(2, packages.get(0).getTableId());

@@ -2,20 +2,16 @@ package org.example.application.monsterTradingCards.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.application.monsterTradingCards.model.Card;
-import org.example.application.monsterTradingCards.model.Package;
-import org.example.application.monsterTradingCards.model.User;
-import org.example.application.monsterTradingCards.repository.CardRepository;
-import org.example.application.monsterTradingCards.repository.PackageRepository;
-import org.example.application.monsterTradingCards.service.LoginService;
 import org.example.server.dto.Request;
 import org.example.server.dto.Response;
 import org.example.server.http.Authorization;
 import org.example.server.http.ContentType;
 import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
-
-import java.util.ArrayList;
+import org.example.application.monsterTradingCards.model.Card;
+import org.example.application.monsterTradingCards.model.Package;
+import org.example.application.monsterTradingCards.repository.CardRepository;
+import org.example.application.monsterTradingCards.repository.PackageRepository;
 
 public class PackageController {
     private final CardRepository cardRepository;
@@ -52,7 +48,7 @@ public class PackageController {
         // only admin can create packages (save it to the database)
         if(authorization.equals("Basic admin-mtcgToken")) {
             cards = cardRepository.save(cards);
-            pack = packageRepository.save(pack);
+            packageRepository.save(pack);
         }
 
         Response response = new Response();

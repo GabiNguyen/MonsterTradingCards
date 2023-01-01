@@ -12,16 +12,18 @@ public class Card {
     private Double damage;
 
     private String cardHolder;
-//    private ElementType elementType;
-//    private Category category;
 
-//    private ArrayList<Card> cards;
+    // initialize element type and category -> otherwise null pointer exception
+    private ElementType elementType = ElementType.NORMAL;
+    private Category category = Category.SPELL;
 
-    public Card(String id, String name, Double damage, String cardHolder) {
+    public Card(String id, String name, Double damage, String cardHolder, String elementType, String category) {
         this.id = id;
         this.name = name;
         this.damage = damage;
         this.cardHolder = cardHolder;
+        this.elementType.elementType = elementType;
+        this.category.category = category;
     }
 
     public Card(String id) {
@@ -52,12 +54,11 @@ public class Card {
 
     public void setCardHolder(String cardHolder) { this.cardHolder = cardHolder; }
 
-//    public ElementType getElementType() {
-//        return elementType;
-//    }
-//    public void setElementType(ElementType elementType) { this.elementType = elementType; }
-//    public Category getCategory() { return category; }
-//    public void setCategory(Category category) { this.category = category; }
+    public ElementType getElementType() { return elementType; }
+    public void setElementType(ElementType elementType) { this.elementType = elementType; }
+
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
 //    @Override
 //    public String toString() {

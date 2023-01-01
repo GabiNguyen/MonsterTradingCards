@@ -52,7 +52,10 @@ public class DatabaseInit {
                         userid VARCHAR(255),
                         FOREIGN KEY(userid) references users(username),
                         name VARCHAR(255) NOT NULL,
-                        damage INT NOT NULL
+                        damage INT NOT NULL,
+                        type VARCHAR(255) NOT NULL,
+                        category VARCHAR(255) NOT NULL
+                        
                     );
                     """
         );
@@ -75,9 +78,6 @@ public class DatabaseInit {
         );
         stmt4.close();
 
-//        for later  maybe
-//        elementType CHAR(255) NOT NULL,
-//        category CHAR(255) NOT NULL
 
         // Create decks table
         Statement stmt5 = conn.createStatement();
@@ -93,7 +93,6 @@ public class DatabaseInit {
                         FOREIGN KEY(second) references cards(id),
                         FOREIGN KEY(third) references cards(id),
                         FOREIGN KEY(fourth) references cards(id)
-                        
                     );
                     """
         );
@@ -109,11 +108,22 @@ public class DatabaseInit {
                         loss INT NOT NULL,
                         games INT NOT NULL,
                         elo INT NOT NULL
-                        
                     );
                     """
         );
         stmt6.close();
+
+        // Create stats table
+        Statement stmt7 = conn.createStatement();
+        stmt7.execute(
+                """
+                    CREATE TABLE IF NOT EXISTS scores (
+                        uid VARCHAR(255) PRIMARY KEY,
+                        elo INT NOT NULL   
+                    );
+                    """
+        );
+        stmt7.close();
 
     }
 }
