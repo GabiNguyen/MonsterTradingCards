@@ -3,6 +3,7 @@ package org.example.application.monsterTradingCards.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.application.monsterTradingCards.model.User;
+import org.example.application.monsterTradingCards.repository.StatsRepository;
 import org.example.application.monsterTradingCards.repository.UserRepository;
 import org.example.application.monsterTradingCards.service.LoginService;
 import org.example.server.dto.Request;
@@ -15,8 +16,12 @@ public class UserController {
 
     static User user;
     private final UserRepository userRepository;
+    private final StatsRepository statsRepository;
 
-    public UserController(UserRepository userRepository) { this.userRepository = userRepository; }
+    public UserController(UserRepository userRepository, StatsRepository statsRepository) {
+        this.userRepository = userRepository;
+        this.statsRepository = statsRepository;
+    }
 
     public Response handle(Request request) {
         if (request.getMethod().equals(Method.POST.method)) { return create(request); }
@@ -43,6 +48,9 @@ public class UserController {
         }
 
         user = userRepository.save(user);
+        // set starting stats
+        statsRepository.save(user);
+
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);

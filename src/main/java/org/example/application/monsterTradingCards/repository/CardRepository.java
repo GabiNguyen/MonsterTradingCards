@@ -1,9 +1,8 @@
 package org.example.application.monsterTradingCards.repository;
 
 import org.example.application.monsterTradingCards.controller.SessionController;
-import org.example.application.monsterTradingCards.model.Card;
+import org.example.application.monsterTradingCards.model.*;
 import org.example.application.monsterTradingCards.model.Package;
-import org.example.application.monsterTradingCards.model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +27,8 @@ public class CardRepository {
             try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()) {
                     allCards.add(new Card(rs.getString("id"), rs.getString("name"),
-                                          rs.getDouble("damage"), rs.getString("userid")));
+                                          rs.getDouble("damage"), rs.getString("userid"),
+                                          rs.getString("type"), rs.getString("category")));
                 }
             }
         } catch (SQLException e) {
@@ -46,10 +46,10 @@ public class CardRepository {
             try(ResultSet rs = ps.executeQuery()) {
                 if(rs.next()) {
                     // card already exists
-                    // https://stackoverflow.com/questions/65197006/saving-and-reading-the-enum-value-to-the-database-with-jdbc
-                    return new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid"));
-//                    for later maybe
-//                    ElementType.valueOf(rs.getString("elementtype")), Category.valueOf(rs.getString("category")
+                    return new Card(rs.getString("id"), rs.getString("name"),
+                                    rs.getDouble("damage"), rs.getString("userid"),
+                                    rs.getString("type"), rs.getString("category"));
+
                 } else {
                     return null;
                 }
@@ -78,26 +78,58 @@ public class CardRepository {
             throw new RuntimeException(e);
         }
     }
+//    public static Card[] save(Card[] cards) {
+//        Card foundCard = null;
+//        for (Card card : cards) {
+//            foundCard = findById(card.getId());
+//        }
+//        // card not found in database
+//        if(foundCard == null) {
+//            // create new card
+//            String insertCard = "INSERT INTO cards (id, name, damage,) VALUES (?, ?, ?)";
+//            try(PreparedStatement ps = conn.prepareStatement(insertCard)) {
+//                for (Card card : cards) {
+//                    ps.setString(1, card.getId());
+//                    ps.setString(2, card.getName());
+//                    ps.setDouble(3, card.getDamage());
+//                    ps.execute();
+//                }
+//
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//                throw new RuntimeException(e);
+//            }
+//            return cards;
+//        }
+//        return null;
+//    }
+
     public static Card[] save(Card[] cards) {
         Card foundCard = null;
         for (Card card : cards) {
             foundCard = findById(card.getId());
-//            System.out.println(card.getId());
         }
         // card not found in database
         if(foundCard == null) {
             // create new card
-            String insertCard = "INSERT INTO cards (id, name, damage) VALUES (?, ?, ?)";
+            String insertCard = "INSERT INTO cards (id, name, damage, type, category) VALUES (?, ?, ?, ?, ?)";
             try(PreparedStatement ps = conn.prepareStatement(insertCard)) {
-//                ps.setString(1, card[0].getId());
-//                ps.setString(2, card[0].getName());
-//                ps.setDouble(3, card[0].getDamage());
-//                ps.setString(4, card[4].getElementType().name());s
-//                ps.setString(5, card[5].getCategory().name());
                 for (Card card : cards) {
                     ps.setString(1, card.getId());
                     ps.setString(2, card.getName());
                     ps.setDouble(3, card.getDamage());
+                    if(card.getName().contains("Water")) {
+                        ps.setString(4, ElementType.WATER.elementType);
+                    } else if (card.getName().contains("Fire")) {
+                        ps.setString(4, ElementType.FIRE.elementType);
+                    } else {
+                        ps.setString(4, ElementType.NORMAL.elementType);
+                    }
+                    if(card.getName().contains("Spell")) {
+                        ps.setString(5, Category.SPELL.category);
+                    } else {
+                        ps.setString(5, Category.MONSTER.category);
+                    }
                     ps.execute();
                 }
 
@@ -110,33 +142,6 @@ public class CardRepository {
         return null;
     }
 
-//    public static ArrayList<Card> update(ArrayList<Card> cards, User sessionUser) {
-//        String cardHolder = null;
-//        String username = sessionUser.getUsername();
-//
-//        for (Card card : cards) {
-//            cardHolder = findCardHolder(card.getCardHolder());
-//        }
-//
-//        // if no user owns the card
-//        if(cardHolder == null) {
-//            // update foreign key (ownership of card)
-//            String update = "UPDATE cards SET userid = ? WHERE id = ?";
-//            try (PreparedStatement ps = conn.prepareStatement(update)) {
-//                for (Card card : cards) {
-//                    ps.setString(1, username);
-//                    ps.setString(2, card.getId());
-//                    ps.execute();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//                throw new RuntimeException(e);
-//            }
-//            return cards;
-//        }
-//        return null;
-//    }
-
     public static ArrayList<Card> update(Package pack, User sessionUser) {
         ArrayList<String> cardIds = new ArrayList<>();
         cardIds.add(pack.getCard1());
@@ -145,6 +150,7 @@ public class CardRepository {
         cardIds.add(pack.getCard4());
         cardIds.add(pack.getCard5());
 
+        // Array List for storing all information about a card
         ArrayList<Card> cards = new ArrayList<>();
         for (String cardId : cardIds) {
             cards.add(findById(cardId));

@@ -84,7 +84,9 @@ public class DeckRepository {
                 ps.setString(2, uid);
                 try(ResultSet rs = ps.executeQuery()) {
                     if(rs.next()) {
-                        deck[i] = new Card(rs.getString("id"), rs.getString("name"), rs.getDouble("damage"), rs.getString("userid"));
+                        deck[i] = new Card(rs.getString("id"), rs.getString("name"),
+                                           rs.getDouble("damage"), rs.getString("userid"),
+                                           rs.getString("type"), rs.getString("category"));
                         i++;
                     }
                     else {

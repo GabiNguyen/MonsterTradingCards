@@ -29,17 +29,17 @@ public class ScoreController {
     private Response score(Request request) {
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String username = SessionController.user.getUsername();
-        User user = SessionController.user;
+        String authHeader = request.getAuthorization();
+        User sessionUser = LoginService.checkToken(authHeader);
 
         Response response = new Response();
         response.setStatusCode(StatusCode.OK);
         response.setContentType(ContentType.APPLICATION_JSON);
         String content = null;
+
         try {
-            // gets only in if path ends with logged-in user and if authorization header equals token of logged-in user
-            if (request.getPath().endsWith("/" + username) && request.getAuthorization().equals(LoginService.authorize(user))) {
-                content = objectMapper.writeValueAsString(scoreRepository.showStats(username));
+            if (sessionUser != null) {
+                content = objectMapper.writeValueAsString(scoreRepository.read(sessionUser));
             } else {
                 content = "Not authorized to do this action!";
             }
