@@ -22,12 +22,12 @@ public class Stat {
     public void setWin(int win) { this.win = win; }
 
     public int getLoss() { return loss; }
-    public void setLoss(int loss) { this.win = loss; }
+    public void setLoss(int loss) { this.loss = loss; }
 
     public int getGames() { return games; }
     public void setGames(int games) { this.games = games; }
 
     public int getElo() { return elo; }
-    public void setElo(int elo) { this.win = elo; }
+    public void setElo(int elo) { this.elo = elo; }
 
 }

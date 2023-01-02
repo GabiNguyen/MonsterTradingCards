@@ -3,6 +3,7 @@ package org.example.application.monsterTradingCards.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.application.monsterTradingCards.model.User;
+import org.example.application.monsterTradingCards.repository.ScoreRepository;
 import org.example.application.monsterTradingCards.repository.StatsRepository;
 import org.example.application.monsterTradingCards.service.LoginService;
 import org.example.server.dto.Request;
@@ -12,9 +13,9 @@ import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
 
 public class ScoreController {
-    private final StatsRepository scoreRepository;
+    private final ScoreRepository scoreRepository;
 
-    public ScoreController(StatsRepository scoreRepository) { this.scoreRepository = scoreRepository; }
+    public ScoreController(ScoreRepository scoreRepository) { this.scoreRepository = scoreRepository; }
     public Response handle(Request request) {
         if (request.getMethod().equals(Method.GET.method)) { return score(request); }
 
@@ -39,7 +40,7 @@ public class ScoreController {
 
         try {
             if (sessionUser != null) {
-                content = objectMapper.writeValueAsString(scoreRepository.read(sessionUser));
+                content = objectMapper.writeValueAsString(scoreRepository.read());
             } else {
                 content = "Not authorized to do this action!";
             }

@@ -14,6 +14,7 @@ import java.util.List;
 import static org.example.DatabaseInit.conn;
 
 public class CardRepository {
+
     private final List<Card> cards;
 
     public CardRepository() { this.cards = new ArrayList<>(); }

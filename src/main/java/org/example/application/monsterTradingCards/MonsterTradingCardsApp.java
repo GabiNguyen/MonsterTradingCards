@@ -27,6 +27,8 @@ public class MonsterTradingCardsApp implements Application {
         PackageRepository packageRepository = new PackageRepository();
         DeckRepository deckRepository = new DeckRepository();
         StatsRepository statsRepository = new StatsRepository();
+        ScoreRepository scoreRepository = new ScoreRepository();
+        BattleRepository battleRepository = new BattleRepository();
 
         this.userController = new UserController(userRepository, statsRepository);
         this.sessionController = new SessionController(userRepository);
@@ -35,7 +37,8 @@ public class MonsterTradingCardsApp implements Application {
         this.cardController = new CardController(cardRepository);
         this.deckController = new DeckController(deckRepository);
         this.statsController = new StatsController(statsRepository);
-        this.scoreController = new ScoreController(statsRepository);
+        this.scoreController = new ScoreController(scoreRepository);
+        this.battleController = new BattleController(battleRepository);
     }
 
     @Override
@@ -65,7 +68,7 @@ public class MonsterTradingCardsApp implements Application {
         }
 
         if (request.getPath().startsWith("/battles")) {
-            return userController.handle(request);
+            return battleController.handle(request);
         }
 
         if (request.getPath().startsWith("/score")) {
