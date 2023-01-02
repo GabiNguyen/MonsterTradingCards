@@ -106,6 +106,7 @@ public class DatabaseInit {
                         uid VARCHAR(255) PRIMARY KEY,
                         win INT NOT NULL,
                         loss INT NOT NULL,
+                        draw INT NOT NULL,
                         games INT NOT NULL,
                         elo INT NOT NULL
                     );
@@ -113,17 +114,19 @@ public class DatabaseInit {
         );
         stmt6.close();
 
-        // Create stats table
-        Statement stmt7 = conn.createStatement();
-        stmt7.execute(
-                """
-                    CREATE TABLE IF NOT EXISTS scores (
-                        uid VARCHAR(255) PRIMARY KEY,
-                        elo INT NOT NULL   
-                    );
-                    """
-        );
-        stmt7.close();
+        // TODO: overthink battle table
+        // Create battle table
+//        Statement stmt7 = conn.createStatement();
+//        stmt7.execute(
+//                """
+//                    CREATE TABLE IF NOT EXISTS battle (
+//                        id serial PRIMARY KEY,
+//                        player1 VARCHAR(255) NOT NULL,
+//                        player2 VARCHAR(255) NOT NULL
+//                    );
+//                """
+//        );
+//        stmt7.close();
 
     }
 }

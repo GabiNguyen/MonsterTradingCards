@@ -6,6 +6,7 @@ import org.example.application.monsterTradingCards.model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static org.example.DatabaseInit.conn;
 public class StatsRepository {
@@ -35,7 +36,7 @@ public class StatsRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Stat(rs.getString("uid"), rs.getInt("win"),
-                            rs.getInt("loss"), rs.getInt("games"),
+                                    rs.getInt("loss"), rs.getInt("games"),
                             rs.getInt("elo"));
                 } else {
                     return null;
@@ -46,4 +47,5 @@ public class StatsRepository {
             throw new RuntimeException(e);
         }
     }
+
 }
