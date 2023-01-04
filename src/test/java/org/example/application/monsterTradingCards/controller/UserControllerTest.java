@@ -35,7 +35,7 @@ class UserControllerTest {
 //        when(userRepository.findAll()).thenReturn(users);
 
         //houseRepository = new HouseMemoryRepository();
-        userController = new org.example.application.monsterTradingCards.controller.UserController(userRepository);
+//        userController = new org.example.application.monsterTradingCards.controller.UserController(userRepository);
 
         Request request = new Request();
         request.setMethod("GET");
