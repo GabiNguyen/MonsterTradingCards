@@ -45,7 +45,7 @@ public class StatsController {
 
         try {
             if (sessionUser != null) {
-                content = objectMapper.writeValueAsString(statsRepository.read(sessionUser));
+                content = objectMapper.writeValueAsString(statsRepository.read(sessionUser.getUsername()));
             } else {
                 content = "Not authorized to do this action!";
             }

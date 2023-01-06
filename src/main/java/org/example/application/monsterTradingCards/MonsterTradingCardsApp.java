@@ -28,7 +28,6 @@ public class MonsterTradingCardsApp implements Application {
         DeckRepository deckRepository = new DeckRepository();
         StatsRepository statsRepository = new StatsRepository();
         ScoreRepository scoreRepository = new ScoreRepository();
-        BattleRepository battleRepository = new BattleRepository();
 
         this.userController = new UserController(userRepository, statsRepository);
         this.sessionController = new SessionController(userRepository);
@@ -38,7 +37,7 @@ public class MonsterTradingCardsApp implements Application {
         this.deckController = new DeckController(deckRepository);
         this.statsController = new StatsController(statsRepository);
         this.scoreController = new ScoreController(scoreRepository);
-        this.battleController = new BattleController(battleRepository);
+        this.battleController = new BattleController();
     }
 
     @Override
