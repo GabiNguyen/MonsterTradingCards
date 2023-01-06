@@ -44,7 +44,7 @@ public class PackageController {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        // TODO: error handling if user isn't logged-in (user == null)
+
         // only admin can create packages (save it to the database)
         if(authorization.equals("Basic admin-mtcgToken")) {
             cards = cardRepository.save(cards);

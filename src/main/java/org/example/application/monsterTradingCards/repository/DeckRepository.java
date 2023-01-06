@@ -19,28 +19,6 @@ public class DeckRepository {
 
     public DeckRepository() { this.deck = new ArrayList<>(); }
 
-//    public static Card[] findDeck(String uid) {
-//        Card[] deck = new Card[4];
-//        int i = 0;
-////        int cardNum = 2;
-//        String showDeck = "SELECT * FROM decks WHERE uid = ?";
-//        try(PreparedStatement ps = conn.prepareStatement(showDeck)) {
-//            ps.setString(1, uid);
-//            try(ResultSet rs = ps.executeQuery()) {
-//                while(rs.next()) {
-//                    for (int cardNum = 2; cardNum < 6; cardNum++) {
-//                        deck[i] = new Card(rs.getString(cardNum));
-//                        i++;
-//                    }
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e);
-//        }
-//        return deck;
-//    }
-
     // method to get id of cards in the deck table
     public static Card[] deck(String uid) {
         Card[] deck = new Card[4];
@@ -61,7 +39,6 @@ public class DeckRepository {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-//        for (int i = 0; i < deck.length; i++) {System.out.println(deck[i].getId());}
 
         return deck;
     }

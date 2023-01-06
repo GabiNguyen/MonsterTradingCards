@@ -22,8 +22,8 @@ public class Card {
         this.name = name;
         this.damage = damage;
         this.cardHolder = cardHolder;
-        this.elementType.elementType = elementType;
-        this.category.category = category;
+        this.elementType = ElementType.valueOf(elementType.toUpperCase());
+        this.category = Category.valueOf(category.toUpperCase());
     }
 
     public Card(String id) {
@@ -36,9 +36,7 @@ public class Card {
 
     public void setId(String id) { this.id = id; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
     public void setName(String name) { this.name = name; }
 

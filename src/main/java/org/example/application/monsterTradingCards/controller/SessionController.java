@@ -46,17 +46,7 @@ public class SessionController {
             throw new RuntimeException(e);
         }
 
-        //TODO: session doesn't work the way intended, user has to be the last one to log in if they want to do sth
-        // -> should be able to do sth regardless when last logged in
-        // check if authorization header and token matches
         user = LoginService.login(user);
-//        if (user != null) {
-//            HttpSession session = request.getSession();
-//            session.setMaxInactiveInterval(100);
-//        }
-
-//        // user could log in -> use user of UserController (temporary fix for coins)
-//        if(user != null) { user = UserController.user;}
 
         Response response = new Response();
         response.setStatusCode(StatusCode.OK);
@@ -73,21 +63,5 @@ public class SessionController {
         return response;
     }
 
-    //    private UserMemoryRepository userMemoryRepository;
-
-//    private Response getUsers(Request request) {
-//        List<User> users = this.userRepository.findAll();
-//
-//        Response response = new Response();
-//        response.setStatusCode(StatusCode.OK);
-//        response.setContentType(ContentType.TEXT_PLAIN);
-//        response.setContent(users.toString());
-//
-//        return response;
-//    }
-
-//    public UserRepository getUserRepository() {
-//        return userRepository;
-//    }
 
 }

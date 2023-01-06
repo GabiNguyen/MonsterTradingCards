@@ -3,26 +3,37 @@ package org.example.application.monsterTradingCards.service;
 import org.example.application.monsterTradingCards.model.Card;
 import org.example.application.monsterTradingCards.model.User;
 import org.example.application.monsterTradingCards.repository.DeckRepository;
+import org.example.application.monsterTradingCards.repository.StatsRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BattleService {
-    public static String start(User player1, User player2) {
+    public static ArrayList<String> start(User player1, User player2) {
         int p1Score = 0;
         int p2Score = 0;
         String winner = "";
+        String loser = "";
+        ArrayList<String> log = new ArrayList<>();
 
         // get deck of players (convert Array of Cards to Array List in order to have a dynamic deck)
         // https://www.geeksforgeeks.org/array-to-arraylist-conversion-in-java/
         ArrayList<Card> p1Deck = new ArrayList<>(Arrays.asList(DeckRepository.findDeck(player1.getUsername())));
         ArrayList<Card> p2Deck = new ArrayList<>(Arrays.asList(DeckRepository.findDeck(player2.getUsername())));
 
-        // limit to 100 rounds
-        for (int i = 0; i < 100; i++) {
 
-            if(p1Deck.size() == 0) { break; }
-            if(p2Deck.size() == 0) { break; }
+        // limit to 100 rounds
+        for (int i = 1; i <= 100; i++) {
+            log.add("\r\n--------------------------  ROUND: " + i + " --------------------------\r\n");
+
+            if(p1Deck.size() == 0) {
+                log.add("Player: " + player1.getUsername() + "has no cards left in the deck!\r\n");
+                break;
+            }
+            if(p2Deck.size() == 0) {
+                log.add("Player: " + player2.getUsername() + "has no cards left in the deck!\r\n");
+                break;
+            }
 
             // pick random index in Deck
             // https://www.geeksforgeeks.org/getting-random-elements-from-arraylist-in-java/
@@ -32,29 +43,48 @@ public class BattleService {
             // get card at picked index
             Card p1Card = p1Deck.get(p1Pick);
             Card p2Card = p2Deck.get(p2Pick);
+            log.add("Card[" + p1Card.getName() + "] of player: " + player1.getUsername() + " goes against " + "Card[" + p2Card.getName() + "] of player: " + player2.getUsername() + "\r\n");
 
             // determine winner of round and increment score of round battle winner
             // + move card from loser deck to winner deck
             if (roundBattle(p1Card, p2Card).equals(p1Card.getName())) {
+                log.add("Player -" + player1.getUsername() + "- wins this round!\r\n");
                 p1Deck.remove(p1Pick);
                 p1Deck.add(p2Card);
                 p1Score++;
             } else if (roundBattle(p1Card, p2Card).equals(p1Card.getName())) {
+                log.add("Player -" + player2.getUsername() + "- wins this round!\r\n");
                 p2Deck.remove(p2Pick);
                 p2Deck.add(p1Card);
                 p2Score++;
             }
 
             // draw
-            if (p1Score == p1Score) {
+            if (p1Score == p2Score) {
                 winner = "";
             // check which score is bigger and update winner
             } else {
                 winner = (p1Score > p2Score) ? player1.getUsername() : player2.getUsername();
+                loser = (p1Score < p2Score) ? player1.getUsername() : player2.getUsername();
+
             }
         }
 
-        return winner;
+        log.add("------------------------ Battle Finished ------------------------\r\n");
+
+        if (!winner.equals("")) {
+            StatsRepository.update(winner, true);
+            StatsRepository.update(loser, false);
+            log.add("Congratulations! The winner of this game is -" + winner + "-\r\n");
+            log.add("Nice try -" + loser + "-! Maybe you will get them next time :)\r\n");
+        } else {
+            StatsRepository.updateDraw(player1.getUsername());
+            StatsRepository.updateDraw(player2.getUsername());
+            log.add("Draw!\r\n");
+        }
+
+        System.out.println(log);
+        return log;
     }
 
     public static String roundBattle(Card p1Card, Card p2Card) {
@@ -117,6 +147,7 @@ public class BattleService {
         return winner;
     }
 
+    // method to determine which element type is effective against another element type
     public static String effectiveness(Card p1Card, Card p2Card) {
 
         String winner;
@@ -157,7 +188,7 @@ public class BattleService {
                 winner = (p1Card.getDamage() * 2) > (p2Card.getDamage() / 2) ? p1Card.getName() : p2Card.getName();
             }
         } else {
-            if ((p1Card.getDamage() * 2) == (p2Card.getDamage() / 2)) {
+            if ((p2Card.getDamage() * 2) == (p1Card.getDamage() / 2)) {
                 winner = "";
             } else {
                 winner = (p2Card.getDamage() * 2) > (p1Card.getDamage() / 2) ? p2Card.getName() : p1Card.getName();
@@ -166,5 +197,11 @@ public class BattleService {
 
         return winner;
     }
+
+//    public static ArrayList<String> log(String log) {
+//        ArrayList<String> battleLog = new ArrayList<>();
+//        battleLog.add(log);
+//        return battleLog;
+//    }
 
 }

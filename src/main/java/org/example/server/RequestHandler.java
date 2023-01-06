@@ -20,7 +20,7 @@ public class RequestHandler implements Runnable {
     private final Socket socket;
     private final Application application;
 
-    public RequestHandler(Socket socket, org.example.server.Application application) {
+    public RequestHandler(Socket socket, Application application) {
         this.socket = socket;
         this.application = application;
     }

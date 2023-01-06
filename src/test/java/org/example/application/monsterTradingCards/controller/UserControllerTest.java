@@ -1,5 +1,6 @@
 package org.example.application.monsterTradingCards.controller;
 
+import org.example.application.monsterTradingCards.repository.StatsRepository;
 import org.example.application.monsterTradingCards.repository.UserRepository;
 import org.example.application.monsterTradingCards.model.User;
 import org.example.server.dto.Request;
@@ -22,9 +23,10 @@ class UserControllerTest {
 
     @Mock
     UserRepository userRepository;
+    StatsRepository statsRepository;
 
     @Test
-    void testGetHouses() {
+    void testGetUsers() {
         //Arrange
         List<User> users = new ArrayList<>();
         users.add(new User("stefi.laber", "password"));
@@ -32,14 +34,16 @@ class UserControllerTest {
         users.add(new User("nico.lerchl", "otis"));
         users.add(new User("janko.hu", "catss"));
 
-//        when(userRepository.findAll()).thenReturn(users);
+        userRepository.findAll("stefi.laber");
+        statsRepository.read("stefi.laber");
 
         //houseRepository = new HouseMemoryRepository();
-//        userController = new org.example.application.monsterTradingCards.controller.UserController(userRepository);
+        userController = new UserController(userRepository, statsRepository);
 
         Request request = new Request();
         request.setMethod("GET");
         request.setPath("/users");
+        request.setAuthorization("BASIC");
 
         //Act
         Response response = userController.handle(request);

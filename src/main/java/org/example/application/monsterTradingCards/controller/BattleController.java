@@ -14,13 +14,13 @@ import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BattleController {
-    private final BattleRepository battleRepository;
     ArrayList<User> players = new ArrayList<>();
 
-    public BattleController(BattleRepository battleRepository) { this.battleRepository = battleRepository; }
+    public BattleController() {}
     public Response handle(Request request) {
         if (request.getMethod().equals(Method.POST.method)) { return battle(request); }
 
@@ -34,31 +34,45 @@ public class BattleController {
 
     private Response battle(Request request) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
+//        ObjectMapper objectMapper = new ObjectMapper();
         String authHeader = request.getAuthorization();
         players.add(LoginService.checkToken(authHeader));
 
         Response response = new Response();
         response.setStatusCode(StatusCode.OK);
         response.setContentType(ContentType.APPLICATION_JSON);
-        String content = null;
+        String content;
 
-        try {
+//        try {
             // check if there are two players
-            if ( players.size() % 2 == 0) {
-//                content = objectMapper.writeValueAsString(battleRepository.read(players.get(0), players.get(1)));
-                content = objectMapper.writeValueAsString(BattleService.start(players.get(0), players.get(1)));
+            if (players.size() % 2 == 0) {
+//                content = objectMapper.writeValueAsString(BattleService.start(players.get(oddIndex()), players.get(evenIndex())));
+                content = String.valueOf(BattleService.start(players.get(oddIndex()), players.get(evenIndex())));
             } else {
-                content = "Waiting for a competitor!";
+                content = "\nWaiting for a competitor!\n";
             }
 
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+
         response.setContent(content);
 
         return response;
-
     }
 
+    int evenIndex() {
+        int index;
+        // e.g. players.size = 4 -> array(index) [0, 1, 2, 3] -> get the fourth(last) element -> index 3
+        index = players.size() - 1;
+        return index;
+    }
+
+    int oddIndex() {
+        int index;
+        // e.g. players.size = 4 -> array(index) [0, 1, 2, 3] -> get the third(2nd to last) element-> index 2
+        index = (players.size() - 2);
+        return index;
+    }
 }
+
