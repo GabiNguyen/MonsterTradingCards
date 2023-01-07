@@ -40,9 +40,7 @@ public class Card {
 
     public void setName(String name) { this.name = name; }
 
-    public double getDamage() {
-        return damage;
-    }
+    public double getDamage() { return damage; }
 
     public void setDamage(Double damage) { this.damage = damage; }
 

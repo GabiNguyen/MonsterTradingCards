@@ -79,32 +79,6 @@ public class CardRepository {
             throw new RuntimeException(e);
         }
     }
-//    public static Card[] save(Card[] cards) {
-//        Card foundCard = null;
-//        for (Card card : cards) {
-//            foundCard = findById(card.getId());
-//        }
-//        // card not found in database
-//        if(foundCard == null) {
-//            // create new card
-//            String insertCard = "INSERT INTO cards (id, name, damage,) VALUES (?, ?, ?)";
-//            try(PreparedStatement ps = conn.prepareStatement(insertCard)) {
-//                for (Card card : cards) {
-//                    ps.setString(1, card.getId());
-//                    ps.setString(2, card.getName());
-//                    ps.setDouble(3, card.getDamage());
-//                    ps.execute();
-//                }
-//
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//                throw new RuntimeException(e);
-//            }
-//            return cards;
-//        }
-//        return null;
-//    }
-
     public static Card[] save(Card[] cards) {
         Card foundCard = null;
         for (Card card : cards) {
@@ -184,6 +158,18 @@ public class CardRepository {
             }
         }
         return allCardsOfUser;
+    }
+
+    public static void updateOwner(String userId, String cardId) {
+        String update = "UPDATE cards SET userid = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(update)) {
+                ps.setString(1, userId);
+                ps.setString(2, cardId);
+                ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 }

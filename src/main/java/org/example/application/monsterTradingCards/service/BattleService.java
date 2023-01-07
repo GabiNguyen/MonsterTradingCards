@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BattleService {
+
     public static ArrayList<String> start(User player1, User player2) {
         int p1Score = 0;
         int p2Score = 0;
         String winner = "";
         String loser = "";
         ArrayList<String> log = new ArrayList<>();
+
 
         // get deck of players (convert Array of Cards to Array List in order to have a dynamic deck)
         // https://www.geeksforgeeks.org/array-to-arraylist-conversion-in-java/
@@ -27,11 +29,11 @@ public class BattleService {
             log.add("\r\n--------------------------  ROUND: " + i + " --------------------------\r\n");
 
             if(p1Deck.size() == 0) {
-                log.add("Player: " + player1.getUsername() + "has no cards left in the deck!\r\n");
+                log.add("Player: " + player1.getUsername() + " has no cards left in the deck!\r\n");
                 break;
             }
             if(p2Deck.size() == 0) {
-                log.add("Player: " + player2.getUsername() + "has no cards left in the deck!\r\n");
+                log.add("Player: " + player2.getUsername() + " has no cards left in the deck!\r\n");
                 break;
             }
 
@@ -47,16 +49,28 @@ public class BattleService {
 
             // determine winner of round and increment score of round battle winner
             // + move card from loser deck to winner deck
-            if (roundBattle(p1Card, p2Card).equals(p1Card.getName())) {
+            if ((roundBattle(p1Card, p2Card).equals(p1Card.getName())) || (roundBattle(p1Card, p2Card).equals(player1.getUsername()))) {
+                log.add(p1Card.getDamage() + " vs " + p2Card.getDamage() + "\r\n");
+                log.add(p1Card.getName() + " of player " + player1.getUsername() + " defeats " + p2Card.getName() + " of player " + player2.getUsername() + "\r\n");
                 log.add("Player -" + player1.getUsername() + "- wins this round!\r\n");
-                p1Deck.remove(p1Pick);
+                // add card from loser to winner deck
                 p1Deck.add(p2Card);
-                p1Score++;
-            } else if (roundBattle(p1Card, p2Card).equals(p1Card.getName())) {
-                log.add("Player -" + player2.getUsername() + "- wins this round!\r\n");
+                // remove card of player 2 from their deck
                 p2Deck.remove(p2Pick);
+                p1Score++;
+            } else if ((roundBattle(p1Card, p2Card).equals(p2Card.getName())) || (roundBattle(p1Card, p2Card).equals(player2.getUsername()))) {
+                log.add(p1Card.getDamage() + " vs " + p2Card.getDamage() + "\r\n");
+                log.add(p2Card.getName() + " of player " + player2.getUsername() + " defeats " + p1Card.getName() + " of player " + player1.getUsername() + "\r\n");
+                log.add("Player -" + player2.getUsername() + "- wins this round!\r\n");
+                // add card from loser to winner deck
                 p2Deck.add(p1Card);
+                // remove card of player 1 from their deck
+                p1Deck.remove(p1Pick);
                 p2Score++;
+            } else {
+                log.add(p1Card.getDamage() + " vs " + p2Card.getDamage() + "\r\n");
+                log.add("Card [" + p1Card.getName() + "] and Card [" + p2Card.getName() +"] are equally strong\r\n");
+                log.add("Draw - nobody wins this round!\r\n");
             }
 
             // draw
@@ -70,17 +84,21 @@ public class BattleService {
             }
         }
 
-        log.add("------------------------ Battle Finished ------------------------\r\n");
+        log.add("\r\n------------------------ Battle Finished ------------------------\r\n");
 
         if (!winner.equals("")) {
+            // update stats + elo calculation
             StatsRepository.update(winner, true);
             StatsRepository.update(loser, false);
             log.add("Congratulations! The winner of this game is -" + winner + "-\r\n");
             log.add("Nice try -" + loser + "-! Maybe you will get them next time :)\r\n");
+            log.add("Score: " + winner + " won with [" + p1Score + "] points and " + loser + " lost with [" + p2Score + "] points\r\n");
         } else {
+            // update only games column
             StatsRepository.updateDraw(player1.getUsername());
             StatsRepository.updateDraw(player2.getUsername());
             log.add("Draw!\r\n");
+            log.add("Score: Both players got " + p1Score + " points\r\n");
         }
 
         System.out.println(log);
@@ -130,13 +148,28 @@ public class BattleService {
             if (damage1 == damage2) {
                 winner = "";
             } else {
-                winner = (damage1 > damage2) ? card1 : card2;
+                // check if same name
+                if(card1.equals(card2)) {
+                    // name of player
+                    winner = (damage1 > damage2) ? p1Card.getCardHolder() : p2Card.getCardHolder();
+                } else {
+                    // name of card
+                    winner = (damage1 > damage2) ? card1 : card2;
+                }
+
             }
         }
 
         // Spell Fights (= round with only spell cards involved):
         else if (category1.equals("Spell") && category2.equals("Spell")) {
-            winner = effectiveness(p1Card, p2Card);
+            // check if same name
+            if(card1.equals(card2)) {
+                // name of player
+                winner = (damage1 > damage2) ? p1Card.getCardHolder() : p2Card.getCardHolder();
+            } else {
+                // name of card
+                winner = effectiveness(p1Card, p2Card);
+            }
         }
 
         // Mixed Fights (= round with a spell card vs a monster card):
@@ -156,11 +189,11 @@ public class BattleService {
 
         // effective (eg: water is effective against fire, so damage is doubled)
         // not effective (eg: fire is not effective against water, so damage is halved)
-        if (type1.equals("Water") && type2.equals("Fire") || type2.equals("Water") && type1.equals("Fire")) {
+        if ((type1.equals("Water") && type2.equals("Fire")) || (type2.equals("Water") && type1.equals("Fire"))) {
             winner = calcDamage("Water", p1Card, p2Card);
-        } else if (type1.equals("Fire") && type2.equals("Normal") || type2.equals("Fire") && type1.equals("Normal")) {
+        } else if ((type1.equals("Fire") && type2.equals("Normal")) || (type2.equals("Fire") && type1.equals("Normal"))) {
             winner = calcDamage("Fire", p1Card, p2Card);
-        } else if (type1.equals("Normal") && type2.equals("Water") || type2.equals("Normal") && type1.equals("Water")) {
+        } else if ((type1.equals("Normal") && type2.equals("Water")) || (type2.equals("Normal") && type1.equals("Water"))) {
             winner = calcDamage("Normal", p1Card, p2Card);
         }
         // no effect (eg: normal monster vs normal spell, no change of damage, direct
@@ -197,11 +230,5 @@ public class BattleService {
 
         return winner;
     }
-
-//    public static ArrayList<String> log(String log) {
-//        ArrayList<String> battleLog = new ArrayList<>();
-//        battleLog.add(log);
-//        return battleLog;
-//    }
 
 }

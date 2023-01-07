@@ -1,9 +1,6 @@
 package org.example.application.monsterTradingCards.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.application.monsterTradingCards.model.User;
-import org.example.application.monsterTradingCards.repository.BattleRepository;
 
 import org.example.application.monsterTradingCards.service.BattleService;
 import org.example.application.monsterTradingCards.service.LoginService;
@@ -14,8 +11,6 @@ import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class BattleController {
     ArrayList<User> players = new ArrayList<>();
@@ -34,7 +29,6 @@ public class BattleController {
 
     private Response battle(Request request) {
 
-//        ObjectMapper objectMapper = new ObjectMapper();
         String authHeader = request.getAuthorization();
         players.add(LoginService.checkToken(authHeader));
 
@@ -43,18 +37,11 @@ public class BattleController {
         response.setContentType(ContentType.APPLICATION_JSON);
         String content;
 
-//        try {
-            // check if there are two players
-            if (players.size() % 2 == 0) {
-//                content = objectMapper.writeValueAsString(BattleService.start(players.get(oddIndex()), players.get(evenIndex())));
-                content = String.valueOf(BattleService.start(players.get(oddIndex()), players.get(evenIndex())));
-            } else {
-                content = "\nWaiting for a competitor!\n";
-            }
-
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
+        if (players.size() % 2 == 0) {
+            content = String.valueOf(BattleService.start(players.get(oddIndex()), players.get(evenIndex())));
+        } else {
+            content = "\nWaiting for a competitor!\n";
+        }
 
         response.setContent(content);
 
@@ -64,7 +51,7 @@ public class BattleController {
     int evenIndex() {
         int index;
         // e.g. players.size = 4 -> array(index) [0, 1, 2, 3] -> get the fourth(last) element -> index 3
-        index = players.size() - 1;
+        index = (players.size() - 1);
         return index;
     }
 

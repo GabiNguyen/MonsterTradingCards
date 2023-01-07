@@ -114,19 +114,21 @@ public class DatabaseInit {
         );
         stmt6.close();
 
-        // TODO: overthink battle table
-        // Create battle table
-//        Statement stmt7 = conn.createStatement();
-//        stmt7.execute(
-//                """
-//                    CREATE TABLE IF NOT EXISTS battle (
-//                        id serial PRIMARY KEY,
-//                        player1 VARCHAR(255) NOT NULL,
-//                        player2 VARCHAR(255) NOT NULL
-//                    );
-//                """
-//        );
-//        stmt7.close();
+        // Create tradings table
+        Statement stmt7 = conn.createStatement();
+        stmt7.execute(
+                """
+                    CREATE TABLE IF NOT EXISTS tradings (
+                        id VARCHAR(255) PRIMARY KEY,
+                        uid VARCHAR(255) NOT NULL,
+                        FOREIGN KEY(uid) references users(username),
+                        cardtotrade VARCHAR(255) NOT NULL,
+                        type VARCHAR(255) NOT NULL,
+                        mindamage INT NOT NULL
+                    );
+                    """
+        );
+        stmt7.close();
 
     }
 }

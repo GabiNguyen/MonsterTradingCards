@@ -28,6 +28,7 @@ public class MonsterTradingCardsApp implements Application {
         DeckRepository deckRepository = new DeckRepository();
         StatsRepository statsRepository = new StatsRepository();
         ScoreRepository scoreRepository = new ScoreRepository();
+        TradingsRepository tradingsRepository = new TradingsRepository();
 
         this.userController = new UserController(userRepository, statsRepository);
         this.sessionController = new SessionController(userRepository);
@@ -38,48 +39,32 @@ public class MonsterTradingCardsApp implements Application {
         this.statsController = new StatsController(statsRepository);
         this.scoreController = new ScoreController(scoreRepository);
         this.battleController = new BattleController();
+        this.tradingController = new TradingController(tradingsRepository);
     }
 
     @Override
     public Response handle(Request request) {
+
         if (request.getPath().startsWith("/users")) {
             return userController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/sessions")) {
+        } else if (request.getPath().startsWith("/sessions")) {
             return sessionController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/packages")) {
+        } else if (request.getPath().startsWith("/packages")) {
             return packageController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/transactions/packages")) {
+        } else if (request.getPath().startsWith("/transactions/packages")) {
             return transactionsController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/cards")) {
+        } else if (request.getPath().startsWith("/cards")) {
             return cardController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/deck")) {
+        } else if (request.getPath().startsWith("/deck")) {
             return deckController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/battles")) {
+        } else if (request.getPath().startsWith("/battles")) {
             return battleController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/score")) {
+        } else if (request.getPath().startsWith("/score")) {
             return scoreController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/stats")) {
+        } else if (request.getPath().startsWith("/stats")) {
             return statsController.handle(request);
-        }
-
-        if (request.getPath().startsWith("/tradings")) {
-            return userController.handle(request);
+        } else if (request.getPath().startsWith("/tradings")) {
+            return tradingController.handle(request);
         }
 
         Response response = new Response();

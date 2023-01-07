@@ -76,8 +76,6 @@ public class UserController {
         response.setContentType(ContentType.APPLICATION_JSON);
         String content = null;
         try {
-            // gets only in if path ends with logged-in user and if authorization header equals token of logged-in user
-            // maybe not smart to check if path is correct in this part of code :/
             if(sessionUser != null && request.getPath().endsWith("/" + sessionUser.getUsername())) {
                 content = objectMapper.writeValueAsString(userRepository.findAll(sessionUser.getUsername()));
             } else {
@@ -123,7 +121,6 @@ public class UserController {
         response.setContent(content);
 
         return response;
-
     }
 
 }
