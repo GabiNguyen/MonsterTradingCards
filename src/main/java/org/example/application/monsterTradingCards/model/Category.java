@@ -1,6 +1,7 @@
 package org.example.application.monsterTradingCards.model;
 
 public enum Category {
+
     MONSTER("Monster"),
     SPELL("Spell")
     ;
@@ -10,4 +11,8 @@ public enum Category {
     }
 
     public String category;
+    @Override
+    public String toString() {
+        return category;
+    }
 }

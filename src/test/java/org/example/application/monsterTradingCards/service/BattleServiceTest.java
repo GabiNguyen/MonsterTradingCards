@@ -165,4 +165,30 @@ class BattleServiceTest {
         assertEquals("Knight",  battleService.roundBattle(card1, card2));
     }
 
+    @Test
+    void testKnightVsWaterGoblin() {
+
+        // Arrange
+        var battleService = new BattleService();
+
+        Card card1 = new Card("card1Id", "Knight", 20.0, "player1", "Normal", "Monster");
+        Card card2 = new Card("card2Id", "WaterGoblin", 10.0, "player2", "Water", "Monster");
+
+        // Act & Assert
+        assertEquals("Knight",  battleService.roundBattle(card1, card2));
+    }
+
+    @Test
+    void testWaterSpellVsWaterGoblin() {
+
+        // Arrange
+        var battleService = new BattleService();
+
+        Card card1 = new Card("card1Id", "WaterSpell", 20.0, "player1", "Water", "Monster");
+        Card card2 = new Card("card2Id", "WaterGoblin", 10.0, "player2", "Water", "Monster");
+
+        // Act & Assert
+        assertEquals("WaterSpell", battleService.roundBattle(card1, card2));
+
+    }
 }
