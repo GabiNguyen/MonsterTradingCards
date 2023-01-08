@@ -38,7 +38,6 @@ public class DeckController {
         User sessionUser = LoginService.checkToken(authHeader);
         Card[] deck = null;
 
-        // TODO: error handling if there is no deck yet (return null or sth)
         if(sessionUser != null) {
             deck = deckRepository.findDeck(sessionUser.getUsername());
         }
@@ -53,7 +52,6 @@ public class DeckController {
         // check if deck is empty
         if(deck == null) {
             cardsContent.add("Deck is not configured yet!");
-//            cardsContent = null;
         } else {
             for(int i = 0; i < deck.length; i++) {
                 cardsContent.add("\r\n" + "Card {" +

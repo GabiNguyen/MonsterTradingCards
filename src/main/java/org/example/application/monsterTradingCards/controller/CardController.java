@@ -36,29 +36,26 @@ public class CardController {
         ArrayList<Card> allCards = cardRepository.findAll();
         ArrayList<Card> allCardsOfUser = null;
 
-        if(sessionUser != null) {
-            allCardsOfUser = cardRepository.showAll(allCards, sessionUser);
-        }
-        // TODO: error handling if there is no token
-
         Response response = new Response();
         response.setStatusCode(StatusCode.OK);
         response.setContentType(ContentType.APPLICATION_JSON);
         ArrayList<String> cardsContent = new ArrayList<>();
         String content;
 
-        for(int i = 0; i < allCardsOfUser.size(); i++) {
-            cardsContent.add("\r\n" + "Card {" +
-                            "Id = '" + allCardsOfUser.get(i).getId() + '\'' +
-                            ", Name = '" + allCardsOfUser.get(i).getName() + '\'' +
-                            ", Damage = '" + allCardsOfUser.get(i).getDamage() + '\'' +
-                            '}');
-        }
-        cardsContent.add("\r\n");
-//        card address and where it's saved (e.g. "org.example.application.monsterTradingCards.model.Card@5e69d280")
-//        content = allCardsOfUser.toString();
-        content = String.valueOf(cardsContent);
+        if(sessionUser != null) {
+            allCardsOfUser = cardRepository.showAll(allCards, sessionUser);
 
+            for(int i = 0; i < allCardsOfUser.size(); i++) {
+                cardsContent.add("\r\n" + "Card {" +
+                        "Id = '" + allCardsOfUser.get(i).getId() + '\'' +
+                        ", Name = '" + allCardsOfUser.get(i).getName() + '\'' +
+                        ", Damage = '" + allCardsOfUser.get(i).getDamage() + '\'' +
+                        '}');
+            }
+            cardsContent.add("\r\n");
+        }
+
+        content = authHeader != null ? String.valueOf(cardsContent) : "No token!";
         response.setContent(content);
 
         return response;

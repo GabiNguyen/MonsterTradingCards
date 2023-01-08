@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import static org.example.DatabaseInit.conn;
 
+// should be in a repository
 public class LoginService {
     private static String token;
     public static User login(User user) {

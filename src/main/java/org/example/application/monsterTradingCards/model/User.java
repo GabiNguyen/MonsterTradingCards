@@ -12,9 +12,6 @@ public class User {
     private String bio;
     private String image;
 
-//    private ArrayList<Card> stack;
-//    private ArrayList<Card> deck;
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;
