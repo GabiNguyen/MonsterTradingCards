@@ -191,4 +191,49 @@ class BattleServiceTest {
         assertEquals("WaterSpell", battleService.roundBattle(card1, card2));
 
     }
+
+    @Test
+    void testCalculateDamage() {
+
+        // Arrange
+        var battleService = new BattleService();
+
+        Card card1 = new Card("card1Id", "WaterSpell", 20.0, "player1", "Water", "Spell");
+        Card card2 = new Card("card2Id", "FireSpell", 20.0, "player2", "Fire", "Spell");
+        String type = "Water";
+
+        // Act & Assert
+        assertEquals("WaterSpell", battleService.calcDamage(type, card1, card2));
+
+    }
+
+    @Test
+    void testCalculateDamage2() {
+
+        // Arrange
+        var battleService = new BattleService();
+
+        Card card1 = new Card("card1Id", "WaterSpell", 20.0, "player1", "Water", "Spell");
+        Card card2 = new Card("card2Id", "FireSpell", 80.0, "player2", "Fire", "Spell");
+        String type = "Water";
+
+        // Act & Assert
+        assertEquals("", battleService.calcDamage(type, card1, card2));
+
+    }
+
+    @Test
+    void testCalculateDamage3() {
+
+        // Arrange
+        var battleService = new BattleService();
+
+        Card card1 = new Card("card1Id", "WaterSpell", 20.0, "player1", "Water", "Spell");
+        Card card2 = new Card("card2Id", "FireSpell", 85.0, "player2", "Fire", "Spell");
+        String type = "Water";
+
+        // Act & Assert
+        assertEquals("FireSpell", battleService.calcDamage(type, card1, card2));
+
+    }
 }

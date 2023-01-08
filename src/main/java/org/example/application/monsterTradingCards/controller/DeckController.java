@@ -15,6 +15,7 @@ import org.example.server.http.Method;
 import org.example.server.http.StatusCode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DeckController {
     private final DeckRepository deckRepository;
@@ -46,13 +47,13 @@ public class DeckController {
         response.setStatusCode(StatusCode.CREATED);
         response.setContentType(ContentType.APPLICATION_JSON);
         response.setAuthorization(Authorization.BASIC);
-        String content;
+        String content = "";
         ArrayList<String> cardsContent = new ArrayList<>();
 
         // check if deck is empty
         if(deck == null) {
             cardsContent.add("Deck is not configured yet!");
-        } else {
+        } else if(request.getPath().endsWith("plain")) {
             for(int i = 0; i < deck.length; i++) {
                 cardsContent.add("\r\n" + "Card {" +
                                 "Id = '" + deck[i].getId() + '\'' +
@@ -61,9 +62,11 @@ public class DeckController {
                                 '}');
             }
             cardsContent.add("\r\n");
+            content = String.valueOf(cardsContent);
+        } else {
+            content = Arrays.toString(deck);
         }
 
-        content = String.valueOf(cardsContent);
         response.setContent(content);
 
         return response;

@@ -2,7 +2,6 @@ package org.example.server.dto;
 
 import org.example.server.http.ContentType;
 import org.example.server.http.Method;
-import org.example.server.http.StatusCode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,15 +34,15 @@ public class RequestTest {
     }
 
     @Test
-    void testSet() {
+    void testSetContentType() {
         // Arrange
         Request request = new Request();
 
         //Act
-        request.setMethod(Method.POST.method);
+        request.setContentType(ContentType.APPLICATION_JSON.contentType);
 
         // Assert
-        assertEquals(Method.POST.method, request.getMethod());
+        assertEquals(ContentType.APPLICATION_JSON.contentType, request.getContentType());
 
     }
 }
