@@ -38,7 +38,6 @@ public class SessionController {
     private Response login(Request request) {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = request.getContent();
-//        System.out.println(json);
 
         try {
             user = objectMapper.readValue(json, User.class);
@@ -54,7 +53,7 @@ public class SessionController {
         response.setAuthorization(Authorization.BASIC);
         String content = null;
         try {
-            content = objectMapper.writeValueAsString(user);
+            content = user != null ? objectMapper.writeValueAsString(user) : "Wrong credentials!";
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

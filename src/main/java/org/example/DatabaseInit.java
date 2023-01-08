@@ -106,7 +106,6 @@ public class DatabaseInit {
                         uid VARCHAR(255) PRIMARY KEY,
                         win INT NOT NULL,
                         loss INT NOT NULL,
-                        draw INT NOT NULL,
                         games INT NOT NULL,
                         elo INT NOT NULL
                     );

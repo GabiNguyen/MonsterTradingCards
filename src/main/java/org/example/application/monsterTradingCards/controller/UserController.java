@@ -48,16 +48,18 @@ public class UserController {
         }
 
         user = userRepository.save(user);
-        // set starting stats
-        statsRepository.save(user);
-
+        // set starting stats if user is created
+        if (user != null) {
+            statsRepository.save(user);;
+        }
 
         Response response = new Response();
         response.setStatusCode(StatusCode.CREATED);
         response.setContentType(ContentType.APPLICATION_JSON);
         String content = null;
         try {
-            content = objectMapper.writeValueAsString(user);
+            // send back created user
+            content = user != null ? objectMapper.writeValueAsString(user) : "User already exists!";
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -114,7 +116,7 @@ public class UserController {
         response.setContentType(ContentType.APPLICATION_JSON);
         String content = null;
         try {
-            content = objectMapper.writeValueAsString(user);
+            content = user != null ? objectMapper.writeValueAsString(user) : "Not allowed! Page of user does not match user token!";
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

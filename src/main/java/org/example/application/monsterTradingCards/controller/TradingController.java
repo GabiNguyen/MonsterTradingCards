@@ -53,6 +53,9 @@ public class TradingController {
         try {
             if(sessionUser != null) {
                 content = objectMapper.writeValueAsString(tradingsRepository.findAll());
+                if(content.equals("null")) {
+                    content = "Currently no trading deals available!";
+                }
             } else {
                 content = "Not authorized to do this action!";
             }

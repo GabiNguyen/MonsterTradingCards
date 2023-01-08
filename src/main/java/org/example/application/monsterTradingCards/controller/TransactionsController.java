@@ -42,19 +42,23 @@ public class TransactionsController {
 
         // get all the packages that haven't been acquired yet
         ArrayList<Package> availablePackages = PackageRepository.findByAvailability();
-        Package acquiredPackage;
+        Package acquiredPackage = null;
         ArrayList<Card> stack = null;
 
         String authHeader = request.getAuthorization();
         User sessionUser = LoginService.checkToken(authHeader);
 
         // if authorization header matches token in session table and doesn't return null
-        if(sessionUser != null) {
+        // and there are available packages to acquire
+        if(sessionUser != null && availablePackages.size() != 0) {
             // acquire a package
             acquiredPackage = PackageRepository.updateAcquiredStatus(availablePackages, sessionUser);
-            stack = CardRepository.update(acquiredPackage, sessionUser);
-            // pay 5 coins (update coins column)
-            userRepository.updateCoins(sessionUser);
+            // stack can only be updated if user could acquire package
+            if (acquiredPackage != null) {
+                stack = CardRepository.update(acquiredPackage, sessionUser);
+                // pay 5 coins (update coins column)
+                userRepository.updateCoins(sessionUser);
+            }
         }
 
         Response response = new Response();
@@ -62,7 +66,8 @@ public class TransactionsController {
         response.setContentType(ContentType.APPLICATION_JSON);
         response.setAuthorization(Authorization.BASIC);
         String content = null;
-        content = stack.toString();
+
+        content = acquiredPackage != null ? stack.toString() : "User could not acquire package!";
         response.setContent(content);
 
         return response;
