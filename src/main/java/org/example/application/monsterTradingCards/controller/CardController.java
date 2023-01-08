@@ -34,7 +34,7 @@ public class CardController {
         String authHeader = request.getAuthorization();
         User sessionUser = LoginService.checkToken(authHeader);
         ArrayList<Card> allCards = cardRepository.findAll();
-        ArrayList<Card> allCardsOfUser = null;
+        ArrayList<Card> allCardsOfUser;
 
         Response response = new Response();
         response.setStatusCode(StatusCode.OK);

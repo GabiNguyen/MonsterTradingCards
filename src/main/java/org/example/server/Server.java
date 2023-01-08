@@ -11,9 +11,9 @@ public class Server {
     public final int PORT = 10001;
     private ServerSocket server;
 
-    private final org.example.server.Application application;
+    private final Application application;
 
-    public Server(org.example.server.Application application) {
+    public Server(Application application) {
         this.application = application;
     }
 
@@ -35,7 +35,7 @@ public class Server {
         while (true) {
             try {
                 Socket socket = server.accept();
-                executorService.submit(new org.example.server.RequestHandler(socket, application));
+                executorService.submit(new RequestHandler(socket, application));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

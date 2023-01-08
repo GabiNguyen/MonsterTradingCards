@@ -66,6 +66,7 @@ public class TradingController {
 
         return response;
     }
+
     private Response create(Request request) {
         String authHeader = request.getAuthorization();
         User sessionUser = LoginService.checkToken(authHeader);
